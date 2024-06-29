@@ -4,9 +4,9 @@ import { type ColumnDef } from '@tanstack/react-table'
 
 import { type Account } from '@/lib/types'
 
+import { DataTableColumnHeader } from '@/components/data-table/data-table-column-headers'
 import { Checkbox } from '@/components/ui/checkbox'
 
-import { AccountsTableColumnHeader } from './accounts-table-column-headers'
 import { AccountsTableRowActions } from './accounts-table-row-actions'
 
 export const columns: ColumnDef<Account>[] = [
@@ -35,7 +35,7 @@ export const columns: ColumnDef<Account>[] = [
 	{
 		accessorKey: 'name',
 		header: ({ column }) => (
-			<AccountsTableColumnHeader
+			<DataTableColumnHeader
 				column={column}
 				title='Name'
 			/>
@@ -56,7 +56,7 @@ export const columns: ColumnDef<Account>[] = [
 	{
 		accessorKey: 'type',
 		header: ({ column }) => (
-			<AccountsTableColumnHeader
+			<DataTableColumnHeader
 				column={column}
 				title='Type'
 			/>
@@ -66,7 +66,7 @@ export const columns: ColumnDef<Account>[] = [
 	{
 		accessorKey: 'balance',
 		header: ({ column }) => (
-			<AccountsTableColumnHeader
+			<DataTableColumnHeader
 				column={column}
 				title='Balance'
 			/>

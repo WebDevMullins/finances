@@ -4,8 +4,8 @@ import { type ColumnDef } from '@tanstack/react-table'
 
 import { type Transaction } from '@/lib/types'
 
+import { DataTableColumnHeader } from '@/components/data-table/data-table-column-headers'
 import { Checkbox } from '@/components/ui/checkbox'
-import { TransactionsTableColumnHeader } from './transactions-table-column-headers'
 import { TransactionsTableRowActions } from './transactions-table-row-actions'
 
 export const columns: ColumnDef<Transaction>[] = [
@@ -34,7 +34,7 @@ export const columns: ColumnDef<Transaction>[] = [
 	{
 		accessorKey: 'name',
 		header: ({ column }) => (
-			<TransactionsTableColumnHeader
+			<DataTableColumnHeader
 				column={column}
 				title='Name'
 			/>
@@ -55,7 +55,7 @@ export const columns: ColumnDef<Transaction>[] = [
 	{
 		accessorKey: 'type',
 		header: ({ column }) => (
-			<TransactionsTableColumnHeader
+			<DataTableColumnHeader
 				column={column}
 				title='Type'
 			/>
@@ -65,7 +65,7 @@ export const columns: ColumnDef<Transaction>[] = [
 	{
 		accessorKey: 'amount',
 		header: ({ column }) => (
-			<TransactionsTableColumnHeader
+			<DataTableColumnHeader
 				column={column}
 				title='Amount'
 			/>

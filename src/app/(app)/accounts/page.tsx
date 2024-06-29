@@ -2,7 +2,7 @@ import { auth } from '@clerk/nextjs/server'
 
 import { type Account } from '@/lib/types'
 
-import { AccountsTable } from './accounts-table/accounts-table'
+import { DataTable } from '@/components/data-table/data-table'
 import { columns } from './accounts-table/columns'
 import CreateAccountButton from './create-account-button'
 
@@ -28,7 +28,7 @@ export default async function AccountsPage() {
 							<CreateAccountButton />
 						</div>
 					</div>
-					<AccountsTable
+					<DataTable
 						columns={columns}
 						data={data?.account as unknown as Account[]}
 					/>

@@ -16,8 +16,8 @@ export function DeleteCategoryItem({ categoryId }: Props) {
 		await execute(categoryId)
 
 		if (error) {
-			console.error('Error creating category', error)
-			toast.error('Error creating category')
+			console.error('Error deleting category', error)
+			toast.error('Error deleting category')
 			return
 		}
 

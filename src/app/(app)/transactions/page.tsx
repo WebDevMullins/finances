@@ -3,8 +3,8 @@ import { auth } from '@clerk/nextjs/server'
 import { type Transaction } from '@/lib/types'
 
 import CreateTransactionButton from './create-transaction-button'
+import { DataTable } from '@/components/data-table/data-table'
 import { columns } from './transactions-table/columns'
-import { TransactionsTable } from './transactions-table/transactions-table'
 
 import { getTransactionsAction } from './actions'
 
@@ -30,7 +30,7 @@ export default async function TransactionsPage() {
 							<CreateTransactionButton />
 						</div>
 					</div>
-					<TransactionsTable
+					<DataTable
 						columns={columns}
 						data={data?.transaction as unknown as Transaction[]}
 					/>

@@ -15,8 +15,8 @@ export function DeleteAccountItem({ accountId }: Props) {
 		await execute(accountId)
 
 		if (error) {
-			console.error('Error creating account', error)
-			toast.error('Error creating account')
+			console.error('Error deleting account', error)
+			toast.error('Error deleting account')
 			return
 		}
 

@@ -16,8 +16,8 @@ export function DeleteTransactionItem({ transactionId }: Props) {
 		await execute(transactionId)
 
 		if (error) {
-			console.error('Error creating transaction', error)
-			toast.error('Error creating transaction')
+			console.error('Error deleting transaction', error)
+			toast.error('Error deleting transaction')
 			return
 		}
 
