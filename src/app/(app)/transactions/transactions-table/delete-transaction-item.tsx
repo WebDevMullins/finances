@@ -1,9 +1,8 @@
 import { toast } from 'sonner'
 import { useServerAction } from 'zsa-react'
 
-import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
+import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog'
 
-import { Trash2Icon } from 'lucide-react'
 import { deleteTransactionAction } from '../actions'
 
 type Props = {
@@ -25,12 +24,5 @@ export function DeleteTransactionItem({ transactionId }: Props) {
 		toast.success('Transaction deleted')
 	}
 
-	return (
-		<DropdownMenuItem
-			onClick={() => deleteTransaction()}
-			className='text-red-500'>
-			<Trash2Icon className='mr-2 size-4' />
-			<span>Delete Transaction</span>
-		</DropdownMenuItem>
-	)
+	return <ConfirmDeleteDialog onClick={deleteTransaction} />
 }

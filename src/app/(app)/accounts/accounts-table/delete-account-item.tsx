@@ -1,9 +1,7 @@
 import { toast } from 'sonner'
 import { useServerAction } from 'zsa-react'
 
-import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
-
-import { Trash2Icon } from 'lucide-react'
+import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog'
 import { deleteAccountAction } from '../actions'
 
 type Props = {
@@ -25,12 +23,5 @@ export function DeleteAccountItem({ accountId }: Props) {
 		toast.success('Account deleted')
 	}
 
-	return (
-		<DropdownMenuItem
-			onClick={() => deleteAccount()}
-			className='text-red-500'>
-			<Trash2Icon className='mr-2 size-4' />
-			<span>Delete Account</span>
-		</DropdownMenuItem>
-	)
+	return <ConfirmDeleteDialog onClick={deleteAccount} />
 }
