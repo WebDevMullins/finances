@@ -48,3 +48,15 @@ export const transactions = createTable('transactions', {
 })
 
 export const TransactionSchema = createInsertSchema(transactions)
+
+export const categories = createTable('categories', {
+	id: text('id').primaryKey(),
+	userId: text('user_id').notNull(),
+	name: varchar('name', { length: 50 }).notNull(),
+	createdAt: timestamp('created_at', { withTimezone: true })
+		.default(sql`CURRENT_TIMESTAMP`)
+		.notNull(),
+	updatedAt: timestamp('updatedAt', { withTimezone: true })
+})
+
+export const CategorySchema = createInsertSchema(categories)

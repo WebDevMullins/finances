@@ -23,3 +23,11 @@ export type Transaction = {
 }
 
 export type TransactionType = 'income' | 'expense'
+
+export type Category = {
+	id: string
+	userId: string
+	name: string
+	createdAt: Date
+	updatedAt: Date | null
+}

@@ -19,7 +19,7 @@ type Props = {
 
 export function ConfirmDeleteDialog({ onClick }: Props) {
 	return (
-		<Dialog>
+		<Dialog modal={true}>
 			<DialogTrigger asChild>
 				<DropdownMenuItem
 					onSelect={(e) => {
@@ -43,12 +43,14 @@ export function ConfirmDeleteDialog({ onClick }: Props) {
 					<DialogClose asChild>
 						<Button variant={'outline'}>Cancel</Button>
 					</DialogClose>
-					<Button
-						variant={'destructive'}
-						onClick={onClick}>
-						<Trash2Icon className='mr-2 size-4' />
-						<span>Delete</span>
-					</Button>
+					<DialogClose asChild>
+						<Button
+							variant={'destructive'}
+							onClick={onClick}>
+							<Trash2Icon className='mr-2 size-4' />
+							<span>Delete</span>
+						</Button>
+					</DialogClose>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>
