@@ -30,6 +30,7 @@ export default async function CategoriesPage() {
 					<DataTable
 						columns={columns}
 						data={data?.category as unknown as Category[]}
+						filterKey='name'
 					/>
 				</div>
 			</div>

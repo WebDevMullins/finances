@@ -31,11 +31,13 @@ import { DataTableToolbar } from './data-table-toolbar'
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[]
 	data: TData[]
+	filterKey: string
 }
 
 export function DataTable<TData, TValue>({
 	columns,
-	data
+	data,
+	filterKey
 }: DataTableProps<TData, TValue>) {
 	const [rowSelection, setRowSelection] = useState({})
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -66,7 +68,7 @@ export function DataTable<TData, TValue>({
 
 	return (
 		<div className='min-w-[800px] space-y-4'>
-			<DataTableToolbar table={table} />
+			<DataTableToolbar table={table} filterKey={filterKey} />
 			<div className='rounded-md border'>
 				<Table>
 					<TableHeader>

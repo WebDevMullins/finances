@@ -31,6 +31,7 @@ export default async function AccountsPage() {
 					<DataTable
 						columns={columns}
 						data={data?.account as unknown as Account[]}
+						filterKey='name'
 					/>
 				</div>
 			</div>

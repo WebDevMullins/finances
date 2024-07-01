@@ -33,6 +33,7 @@ export default async function TransactionsPage() {
 					<DataTable
 						columns={columns}
 						data={data?.transaction as unknown as Transaction[]}
+						filterKey='name'
 					/>
 				</div>
 			</div>
