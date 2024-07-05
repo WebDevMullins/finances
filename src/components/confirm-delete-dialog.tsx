@@ -1,16 +1,17 @@
 import { Trash2Icon } from 'lucide-react'
 
-import { Button } from '@/components/ui/button'
 import {
-	Dialog,
-	DialogClose,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger
-} from '@/components/ui/dialog'
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger
+} from '@/components/ui/alert-dialog'
+import { buttonVariants } from '@/components/ui/button'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 
 type Props = {
@@ -19,8 +20,8 @@ type Props = {
 
 export function ConfirmDeleteDialog({ onClick }: Props) {
 	return (
-		<Dialog modal={true}>
-			<DialogTrigger asChild>
+		<AlertDialog>
+			<AlertDialogTrigger asChild>
 				<DropdownMenuItem
 					onSelect={(e) => {
 						e.preventDefault()
@@ -29,30 +30,26 @@ export function ConfirmDeleteDialog({ onClick }: Props) {
 					<Trash2Icon className='mr-2 size-4' />
 					<span>Delete Item</span>
 				</DropdownMenuItem>
-			</DialogTrigger>
-			<DialogContent className='sm:max-w-[425px]'>
-				<DialogHeader>
-					<DialogTitle>Confirm Deletion</DialogTitle>
-					<DialogDescription>
+			</AlertDialogTrigger>
+			<AlertDialogContent className='sm:max-w-[425px]'>
+				<AlertDialogHeader>
+					<AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
+					<AlertDialogDescription>
 						Are you sure you want to delete this item?
 						<br />
 						This action cannot be undone.
-					</DialogDescription>
-				</DialogHeader>
-				<DialogFooter>
-					<DialogClose asChild>
-						<Button variant={'outline'}>Cancel</Button>
-					</DialogClose>
-					<DialogClose asChild>
-						<Button
-							variant={'destructive'}
-							onClick={onClick}>
-							<Trash2Icon className='mr-2 size-4' />
-							<span>Delete</span>
-						</Button>
-					</DialogClose>
-				</DialogFooter>
-			</DialogContent>
-		</Dialog>
+					</AlertDialogDescription>
+				</AlertDialogHeader>
+				<AlertDialogFooter>
+					<AlertDialogCancel>Cancel</AlertDialogCancel>
+					<AlertDialogAction
+						className={buttonVariants({ variant: 'destructive' })}
+						onClick={onClick}>
+						<Trash2Icon className='mr-2 size-4' />
+						<span>Delete</span>
+					</AlertDialogAction>
+				</AlertDialogFooter>
+			</AlertDialogContent>
+		</AlertDialog>
 	)
 }
