@@ -1,5 +1,3 @@
-import { auth } from '@clerk/nextjs/server'
-
 import { type Account } from '@/lib/types'
 
 import { DataTable } from '@/components/data-table/data-table'
@@ -9,9 +7,7 @@ import CreateAccountButton from './create-account-button'
 import { getAccountsAction } from './actions'
 
 export default async function AccountsPage() {
-	const userId = auth().userId
-
-	const [data] = await getAccountsAction(userId!)
+	const [data] = await getAccountsAction()
 
 	return (
 		<div className='container py-12'>
@@ -30,7 +26,7 @@ export default async function AccountsPage() {
 					</div>
 					<DataTable
 						columns={columns}
-						data={data?.account as unknown as Account[]}
+						data={data?.account as Account[]}
 						filterKey='name'
 					/>
 				</div>

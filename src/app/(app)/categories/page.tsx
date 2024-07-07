@@ -1,5 +1,3 @@
-import { auth } from '@clerk/nextjs/server'
-
 import { DataTable } from '@/components/data-table/data-table'
 import { columns } from './categories-table/columns'
 
@@ -8,9 +6,7 @@ import { getCategoriesAction } from './actions'
 import CreateCategoryButton from './create-category-button'
 
 export default async function CategoriesPage() {
-	const userId = auth().userId
-
-	const [data] = await getCategoriesAction(userId!)
+	const [data] = await getCategoriesAction()
 
 	return (
 		<div className='container py-12'>
@@ -20,7 +16,7 @@ export default async function CategoriesPage() {
 						<div>
 							<h2 className='text-2xl font-bold tracking-tight'>Categories</h2>
 							<p className='text-muted-foreground'>
-								Here&apos;s a list of your transactions
+								Here&apos;s a list of your categories
 							</p>
 						</div>
 						<div className='flex items-center space-x-2'>

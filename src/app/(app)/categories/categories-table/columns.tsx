@@ -40,11 +40,8 @@ export const columns: ColumnDef<Category>[] = [
 			/>
 		),
 		cell: ({ row }) => {
-			// const label = labels.find((label) => label.value === row.original.label)
-
 			return (
 				<div className='flex space-x-2'>
-					{/* {label && <Badge variant="outline">{label.label}</Badge>} */}
 					<span className='max-w-[500px] truncate font-medium'>
 						{row.getValue('name')}
 					</span>
@@ -52,36 +49,6 @@ export const columns: ColumnDef<Category>[] = [
 			)
 		}
 	},
-	// {
-	// 	accessorKey: 'type',
-	// 	header: ({ column }) => (
-	// 		<DataTableColumnHeader
-	// 			column={column}
-	// 			title='Type'
-	// 		/>
-	// 	),
-	// 	cell: ({ row }) => <div className='capitalize'>{row.getValue('type')}</div>
-	// },
-	// {
-	// 	accessorKey: 'amount',
-	// 	header: ({ column }) => (
-	// 		<DataTableColumnHeader
-	// 			column={column}
-	// 			title='Amount'
-	// 		/>
-	// 	),
-	// 	cell: ({ row }) => {
-	// 		const amount = parseFloat(row.getValue('amount'))
-
-	// 		// Format the amount as a dollar amount
-	// 		const formatted = new Intl.NumberFormat('en-US', {
-	// 			style: 'currency',
-	// 			currency: 'USD'
-	// 		}).format(amount)
-
-	// 		return <div className='font-medium'>{formatted}</div>
-	// 	}
-	// },
 	{
 		id: 'actions',
 		cell: ({ row }) => <DataTableRowActions row={row} />
