@@ -4,8 +4,8 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 import {
-	getTransactionsUseCase,
-	deleteTransactionUseCase
+	deleteTransactionUseCase,
+	getTransactionsUseCase
 } from '@/app/use-cases/transactions'
 import { createTransaction } from '@/data-access/transactions'
 import { authenticatedAction } from '@/lib/safe-action'
@@ -16,6 +16,8 @@ export const createTransactionAction = authenticatedAction
 		z.object({
 			name: z.string().min(1),
 			type: z.enum(['income', 'expense']),
+			accountId: z.string().min(1),
+			categoryId: z.string().min(1),
 			amount: z.number().min(1)
 		})
 	)
@@ -27,6 +29,8 @@ export const createTransactionAction = authenticatedAction
 			await createTransaction({
 				name: input.name,
 				type: input.type,
+				accountId: input.accountId,
+				categoryId: input.categoryId,
 				userId: ctx.userId!,
 				plaidId: '123',
 				amount: input.amount
@@ -41,12 +45,11 @@ export const createTransactionAction = authenticatedAction
 
 export const getTransactionsAction = authenticatedAction
 	.createServerAction()
-	.input(z.string())
 	.onError(async () => {
 		console.error('Error fetching transactions')
 	})
-	.handler(async ({ input }) => {
-		const transactions = await getTransactionsUseCase(input)
+	.handler(async ({ ctx }) => {
+		const transactions = await getTransactionsUseCase(ctx.userId!)
 		return transactions
 	})
 

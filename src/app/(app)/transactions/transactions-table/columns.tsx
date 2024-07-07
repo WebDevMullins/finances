@@ -32,6 +32,30 @@ export const columns: ColumnDef<Transaction>[] = [
 		enableHiding: false
 	},
 	{
+		accessorKey: 'createdAt',
+		header: ({ column }) => (
+			<DataTableColumnHeader
+				column={column}
+				title='Date'
+			/>
+		),
+		cell: ({ row }) => {
+			const createdAt = row.getValue('createdAt')
+
+			const formattedDate = createdAt
+				? new Date(createdAt as string).toLocaleDateString('en-us')
+				: ''
+
+			return (
+				<div className='flex space-x-2'>
+					<span className='max-w-[500px] truncate font-medium'>
+						{formattedDate}
+					</span>
+				</div>
+			)
+		}
+	},
+	{
 		accessorKey: 'name',
 		header: ({ column }) => (
 			<DataTableColumnHeader
@@ -40,11 +64,8 @@ export const columns: ColumnDef<Transaction>[] = [
 			/>
 		),
 		cell: ({ row }) => {
-			// const label = labels.find((label) => label.value === row.original.label)
-
 			return (
 				<div className='flex space-x-2'>
-					{/* {label && <Badge variant="outline">{label.label}</Badge>} */}
 					<span className='max-w-[500px] truncate font-medium'>
 						{row.getValue('name')}
 					</span>

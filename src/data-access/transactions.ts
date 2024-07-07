@@ -1,6 +1,6 @@
 import { db } from '@/server/db/index'
 import { transactions } from '@/server/db/schema'
-import { eq } from 'drizzle-orm'
+import { asc, desc, eq } from 'drizzle-orm'
 import { nanoid } from 'nanoid'
 
 import { type TransactionType } from '@/lib/types'
@@ -8,6 +8,8 @@ import { type TransactionType } from '@/lib/types'
 type createTransactionParams = {
 	name: string
 	type: TransactionType
+	accountId: string
+	categoryId: string
 	userId: string
 	plaidId: string
 	amount: number
@@ -16,6 +18,8 @@ type createTransactionParams = {
 export async function createTransaction({
 	name,
 	type,
+	accountId,
+	categoryId,
 	userId,
 	plaidId,
 	amount
@@ -25,7 +29,9 @@ export async function createTransaction({
 			id: nanoid(),
 			name: name,
 			type: type,
+			accountId: accountId,
 			userId: userId,
+			categoryId: categoryId,
 			plaidId: plaidId,
 			amount: amount,
 			createdAt: new Date(),
@@ -39,7 +45,8 @@ export async function createTransaction({
 
 export async function getTransactions(userId: string) {
 	const transaction = await db.query.transactions.findMany({
-		where: eq(transactions.userId, userId)
+		where: eq(transactions.userId, userId),
+		orderBy: [desc(transactions.createdAt)]
 	})
 
 	return { transaction }

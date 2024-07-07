@@ -30,6 +30,10 @@ import {
 	SheetTitle
 } from '@/components/ui/sheet'
 
+import type { Account, Category } from '@/lib/types'
+import { useEffect, useState } from 'react'
+import { getAccountsAction } from '../accounts/actions'
+import { getCategoriesAction } from '../categories/actions'
 import { createTransactionAction } from './actions'
 import { useNewTransaction } from './hooks/use-new-transaction'
 
@@ -41,6 +45,8 @@ type Props = {
 }
 
 const formSchema = z.object({
+	accountId: z.string(),
+	categoryId: z.string(),
 	name: z.string().min(1),
 	type: z.enum(['income', 'expense']),
 	amount: z.coerce.number()
@@ -60,6 +66,29 @@ export function NewTransactionSheet({ id, defaultValues }: Props) {
 		defaultValues: defaultValues
 	})
 
+	const [categories, setCategories] = useState<Category[]>([])
+	const [accounts, setAccounts] = useState<Account[]>([])
+
+	useEffect(() => {
+		async function fetchData() {
+			try {
+				const [accountData] = await getAccountsAction()
+				setAccounts(accountData?.account as Account[])
+			} catch (error) {
+				console.error('Error fetching accounts', error)
+				toast.error('Error fetching accounts')
+			}
+			try {
+				const [categoryData] = await getCategoriesAction()
+				setCategories(categoryData?.category as Category[])
+			} catch (error) {
+				console.error('Error fetching categories', error)
+				toast.error('Error fetching categories')
+			}
+		}
+		fetchData().catch(console.error)
+	}, [])
+
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		await execute(values)
 
@@ -76,7 +105,6 @@ export function NewTransactionSheet({ id, defaultValues }: Props) {
 
 	const handleDelete = () => {
 		console.log('delete')
-		// onDelete?.()
 	}
 
 	return (
@@ -131,6 +159,64 @@ export function NewTransactionSheet({ id, defaultValues }: Props) {
 													value={type}
 													className='capitalize'>
 													{type}
+												</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							name='accountId'
+							control={form.control}
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Account</FormLabel>
+									<Select
+										onValueChange={field.onChange}
+										defaultValue={field.value}>
+										<FormControl>
+											<SelectTrigger>
+												<SelectValue placeholder='Select an account' />
+											</SelectTrigger>
+										</FormControl>
+										<SelectContent>
+											{accounts.map((account) => (
+												<SelectItem
+													key={account.id}
+													value={account.name}
+													className='capitalize'>
+													{account.name}
+												</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							name='categoryId'
+							control={form.control}
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Category</FormLabel>
+									<Select
+										onValueChange={field.onChange}
+										defaultValue={field.value}>
+										<FormControl>
+											<SelectTrigger>
+												<SelectValue placeholder='Select a category' />
+											</SelectTrigger>
+										</FormControl>
+										<SelectContent>
+											{categories.map((category) => (
+												<SelectItem
+													key={category.id}
+													value={category.name}
+													className='capitalize'>
+													{category.name}
 												</SelectItem>
 											))}
 										</SelectContent>

@@ -36,12 +36,12 @@ export const createCategoryAction = authenticatedAction
 
 export const getCategoriesAction = authenticatedAction
 	.createServerAction()
-	.input(z.string())
+	// .input(z.string())
 	.onError(async () => {
 		console.error('Error fetching categories')
 	})
-	.handler(async ({ input }) => {
-		const categories = await getCategoriesUseCase(input)
+	.handler(async ({ ctx }) => {
+		const categories = await getCategoriesUseCase(ctx.userId!)
 		return categories
 	})
 

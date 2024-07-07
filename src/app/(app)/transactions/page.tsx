@@ -1,17 +1,13 @@
-import { auth } from '@clerk/nextjs/server'
-
 import { type Transaction } from '@/lib/types'
 
-import CreateTransactionButton from './create-transaction-button'
 import { DataTable } from '@/components/data-table/data-table'
+import CreateTransactionButton from './create-transaction-button'
 import { columns } from './transactions-table/columns'
 
 import { getTransactionsAction } from './actions'
 
 export default async function TransactionsPage() {
-	const userId = auth().userId
-
-	const [data] = await getTransactionsAction(userId!)
+	const [transactionData] = await getTransactionsAction()
 
 	return (
 		<div className='container py-12'>
@@ -32,7 +28,7 @@ export default async function TransactionsPage() {
 					</div>
 					<DataTable
 						columns={columns}
-						data={data?.transaction as unknown as Transaction[]}
+						data={transactionData?.transaction as Transaction[]}
 						filterKey='name'
 					/>
 				</div>

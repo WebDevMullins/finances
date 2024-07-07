@@ -41,12 +41,11 @@ export const createAccountAction = authenticatedAction
 
 export const getAccountsAction = authenticatedAction
 	.createServerAction()
-	.input(z.string())
 	.onError(async () => {
 		console.error('Error fetching accounts')
 	})
-	.handler(async ({ input }) => {
-		const accounts = await getAccountsUseCase(input)
+	.handler(async ({ ctx }) => {
+		const accounts = await getAccountsUseCase(ctx.userId!)
 		return accounts
 	})
 
