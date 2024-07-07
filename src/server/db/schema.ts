@@ -40,8 +40,8 @@ export const transactions = createTable('transactions', {
 	accountId: text('account_id').notNull(),
 	categoryId: text('category_id'),
 	plaidId: text('plaid_id').notNull(),
-	name: varchar('name', { length: 50 }).notNull(),
-	type: varchar('type', { length: 50 }).notNull(),
+	name: varchar('name').notNull(),
+	type: varchar('type').notNull(),
 	amount: real('amount').notNull(),
 	createdAt: timestamp('created_at', { withTimezone: true })
 		.default(sql`CURRENT_TIMESTAMP`)
@@ -54,7 +54,7 @@ export const TransactionSchema = createInsertSchema(transactions)
 export const categories = createTable('categories', {
 	id: text('id').primaryKey(),
 	userId: text('user_id').notNull(),
-	name: varchar('name', { length: 50 }).notNull(),
+	name: varchar('name').notNull(),
 	createdAt: timestamp('created_at', { withTimezone: true })
 		.default(sql`CURRENT_TIMESTAMP`)
 		.notNull(),

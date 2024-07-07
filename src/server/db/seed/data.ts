@@ -3,7 +3,6 @@ import { faker } from '@faker-js/faker'
 
 const userId = 'user_2hHZ5fBi5FbXa3pwx2Dp5aeYmub'
 
-// Function to generate random accounts data
 function generateRandomAccountsData(numAccounts: number) {
 	const accountsData: Account[] = []
 	for (let i = 1; i <= numAccounts; i++) {
@@ -28,10 +27,11 @@ function generateRandomAccountsData(numAccounts: number) {
 	return accountsData
 }
 
-// Generate 20 random accounts
-export const accountsData = generateRandomAccountsData(20)
-
-function generateRandomTransactionsData(numTransactions: number) {
+function generateRandomTransactionsData(
+	accountsData: Account[],
+	categoriesData: Category[],
+	numTransactions: number
+): Transaction[] {
 	const transactionsData: Transaction[] = []
 	for (let i = 1; i <= numTransactions; i++) {
 		const transaction: Transaction = {
@@ -51,8 +51,6 @@ function generateRandomTransactionsData(numTransactions: number) {
 	return transactionsData
 }
 
-export const transactionsData = generateRandomTransactionsData(100)
-
 function generateRandomCategoriesData(numCategories: number) {
 	const categoriesData: Category[] = []
 	for (let i = 1; i <= numCategories; i++) {
@@ -68,4 +66,34 @@ function generateRandomCategoriesData(numCategories: number) {
 	return categoriesData
 }
 
-export const categoriesData = generateRandomCategoriesData(10)
+function generateCombinedData(
+	numAccounts: number,
+	numTransactions: number,
+	numCategories: number
+): {
+	accountsData: Account[]
+	transactionsData: Transaction[]
+	categoriesData: Category[]
+} {
+	const accountsData = generateRandomAccountsData(numAccounts)
+	const categoriesData = generateRandomCategoriesData(numCategories)
+	const transactionsData = generateRandomTransactionsData(
+		accountsData,
+		categoriesData,
+		numTransactions
+	)
+
+	return {
+		accountsData,
+		transactionsData,
+		categoriesData
+	}
+}
+
+const { accountsData, transactionsData, categoriesData } = generateCombinedData(
+	20,
+	100,
+	10
+)
+
+export { accountsData, categoriesData, transactionsData }

@@ -23,19 +23,6 @@ const seed = async () => {
 		}
 	}
 
-	async function seedTransactionsData() {
-		try {
-			console.log('Seeding transactions data...')
-			console.time('DB has been seeded')
-			// eslint-disable-next-line drizzle/enforce-delete-with-where
-			await db.delete(transactions)
-			await db.insert(transactions).values(transactionsData)
-			// console.log('Transactions data seeded successfully')
-		} catch (error) {
-			console.error('Error seeding transactions data', error)
-		}
-	}
-
 	async function seedCategoriesData() {
 		try {
 			console.log('Seeding categories data...')
@@ -46,6 +33,19 @@ const seed = async () => {
 			// console.log('Categories data seeded successfully')
 		} catch (error) {
 			console.error('Error seeding categories data', error)
+		}
+	}
+
+	async function seedTransactionsData() {
+		try {
+			console.log('Seeding transactions data...')
+			console.time('DB has been seeded')
+			// eslint-disable-next-line drizzle/enforce-delete-with-where
+			await db.delete(transactions)
+			await db.insert(transactions).values(transactionsData)
+			// console.log('Transactions data seeded successfully')
+		} catch (error) {
+			console.error('Error seeding transactions data', error)
 		}
 	}
 
