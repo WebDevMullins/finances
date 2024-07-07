@@ -13,6 +13,8 @@ type AccountType = 'checking' | 'savings' | 'credit' | 'investment' | 'loan'
 
 export type Transaction = {
 	id: string
+	accountId: string
+	categoryId: string
 	userId: string
 	plaidId: string
 	name: string

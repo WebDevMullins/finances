@@ -37,6 +37,8 @@ export const AccountSchema = createInsertSchema(accounts)
 export const transactions = createTable('transactions', {
 	id: text('id').primaryKey(),
 	userId: text('user_id').notNull(),
+	accountId: text('account_id').notNull(),
+	categoryId: text('category_id'),
 	plaidId: text('plaid_id').notNull(),
 	name: varchar('name', { length: 50 }).notNull(),
 	type: varchar('type', { length: 50 }).notNull(),
