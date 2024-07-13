@@ -1,7 +1,7 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { sql } from 'drizzle-orm'
+import { relations } from 'drizzle-orm'
 import {
 	pgTableCreator,
 	real,
@@ -10,6 +10,7 @@ import {
 	varchar
 } from 'drizzle-orm/pg-core'
 import { createInsertSchema } from 'drizzle-zod'
+import { z } from 'zod'
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -23,42 +24,53 @@ export const accounts = createTable('accounts', {
 	id: text('id').primaryKey(),
 	userId: text('user_id').notNull(),
 	plaidId: text('plaid_id').notNull(),
-	name: varchar('name', { length: 50 }).notNull(),
-	type: varchar('type', { length: 50 }).notNull(),
-	balance: real('balance').notNull(),
-	createdAt: timestamp('created_at', { withTimezone: true })
-		.default(sql`CURRENT_TIMESTAMP`)
-		.notNull(),
-	updatedAt: timestamp('updatedAt', { withTimezone: true })
+	name: text('name').notNull()
 })
+
+export const accountsRelations = relations(accounts, ({ many }) => ({
+	transactions: many(transactions)
+}))
 
 export const AccountSchema = createInsertSchema(accounts)
 
 export const transactions = createTable('transactions', {
 	id: text('id').primaryKey(),
-	userId: text('user_id').notNull(),
-	accountId: text('account_id').notNull(),
-	categoryId: text('category_id'),
-	plaidId: text('plaid_id').notNull(),
-	name: varchar('name').notNull(),
-	type: varchar('type').notNull(),
 	amount: real('amount').notNull(),
-	createdAt: timestamp('created_at', { withTimezone: true })
-		.default(sql`CURRENT_TIMESTAMP`)
+	payee: text('payee').notNull(),
+	date: timestamp('date', { mode: 'date' }).notNull(),
+	accountId: text('account_id')
+		.references(() => accounts.id, {
+			onDelete: 'cascade'
+		})
 		.notNull(),
-	updatedAt: timestamp('updatedAt', { withTimezone: true })
+	categoryId: text('category_id').references(() => categories.id, {
+		onDelete: 'set null'
+	})
 })
 
-export const TransactionSchema = createInsertSchema(transactions)
+export const transactionsRelations = relations(transactions, ({ one }) => ({
+	account: one(accounts, {
+		fields: [transactions.accountId],
+		references: [accounts.id]
+	}),
+	categories: one(categories, {
+		fields: [transactions.categoryId],
+		references: [categories.id]
+	})
+}))
+
+export const TransactionSchema = createInsertSchema(transactions, {
+	date: z.coerce.date()
+})
 
 export const categories = createTable('categories', {
 	id: text('id').primaryKey(),
 	userId: text('user_id').notNull(),
-	name: varchar('name').notNull(),
-	createdAt: timestamp('created_at', { withTimezone: true })
-		.default(sql`CURRENT_TIMESTAMP`)
-		.notNull(),
-	updatedAt: timestamp('updatedAt', { withTimezone: true })
+	name: varchar('name').notNull()
 })
+
+export const categoriesRelations = relations(categories, ({ many }) => ({
+	transactions: many(transactions)
+}))
 
 export const CategorySchema = createInsertSchema(categories)

@@ -14,26 +14,24 @@ export const createTransactionAction = authenticatedAction
 	.createServerAction()
 	.input(
 		z.object({
-			name: z.string().min(1),
-			type: z.enum(['income', 'expense']),
+			amount: z.number().min(1),
+			payee: z.string().min(1),
+			date: z.coerce.date(),
 			accountId: z.string().min(1),
-			categoryId: z.string().min(1),
-			amount: z.number().min(1)
+			categoryId: z.string().min(1)
 		})
 	)
 	.onError(async () => {
 		console.error('Error creating transaction')
 	})
-	.handler(async ({ input, ctx }) => {
+	.handler(async ({ input }) => {
 		try {
 			await createTransaction({
-				name: input.name,
-				type: input.type,
+				amount: input.amount,
+				payee: input.payee,
+				date: input.date,
 				accountId: input.accountId,
-				categoryId: input.categoryId,
-				userId: ctx.userId!,
-				plaidId: '123',
-				amount: input.amount
+				categoryId: input.categoryId
 			})
 		} catch (error) {
 			console.error('Error creating transaction', error)

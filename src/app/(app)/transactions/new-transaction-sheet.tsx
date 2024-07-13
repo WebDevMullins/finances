@@ -1,11 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Trash2Icon } from 'lucide-react'
+import { format } from 'date-fns'
+import { CalendarIcon, Trash2Icon } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { useServerAction } from 'zsa-react'
 
 import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
 import {
 	Form,
 	FormControl,
@@ -15,6 +18,11 @@ import {
 	FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger
+} from '@/components/ui/popover'
 import {
 	Select,
 	SelectContent,
@@ -31,7 +39,8 @@ import {
 } from '@/components/ui/sheet'
 
 import type { Account, Category } from '@/lib/types'
-import { useEffect, useState } from 'react'
+
+import { DatePicker } from '@/components/date-picker'
 import { getAccountsAction } from '../accounts/actions'
 import { getCategoriesAction } from '../categories/actions'
 import { createTransactionAction } from './actions'
@@ -45,16 +54,14 @@ type Props = {
 }
 
 const formSchema = z.object({
+	amount: z.coerce.number(),
+	payee: z.string().min(1),
+	date: z.coerce.date(),
 	accountId: z.string(),
-	categoryId: z.string(),
-	name: z.string().min(1),
-	type: z.enum(['income', 'expense']),
-	amount: z.coerce.number()
+	categoryId: z.string()
 })
 
 type Transaction = z.input<typeof formSchema>
-
-const transactionTypes = ['income', 'expense']
 
 export function NewTransactionSheet({ id, defaultValues }: Props) {
 	const { isOpen, onClose } = useNewTransaction()
@@ -95,12 +102,14 @@ export function NewTransactionSheet({ id, defaultValues }: Props) {
 		if (error) {
 			console.error('Error creating transaction', error)
 			toast.error('Error creating transaction')
+			console.log('values', values)
 			return
 		}
 
 		onClose()
 		toast.success('Transaction created')
-		form.reset({ name: '' })
+		form.reset({ payee: '' })
+		console.log('values', values)
 	}
 
 	const handleDelete = () => {
@@ -122,15 +131,34 @@ export function NewTransactionSheet({ id, defaultValues }: Props) {
 						onSubmit={form.handleSubmit(onSubmit)}
 						className='space-y-4 pt-4'>
 						<FormField
-							name='name'
+							control={form.control}
+							name='date'
+							render={({ field }) => (
+								<FormItem className='flex flex-col'>
+									<FormLabel>Date</FormLabel>
+									<DatePicker
+										value={field.value}
+										onChange={field.onChange}
+										disabled={isPending}
+									/>
+									{/* <FormDescription>
+										Your date of birth is used to calculate your age.
+									</FormDescription> */}
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							name='amount'
 							control={form.control}
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Name</FormLabel>
+									<FormLabel>Amount</FormLabel>
 									<FormControl>
 										<Input
+											type='number'
 											disabled={isPending}
-											placeholder='e.g. Gas, Food, Clothes...'
+											placeholder='100.00'
 											{...field}
 										/>
 									</FormControl>
@@ -139,30 +167,18 @@ export function NewTransactionSheet({ id, defaultValues }: Props) {
 							)}
 						/>
 						<FormField
-							name='type'
+							name='payee'
 							control={form.control}
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Type</FormLabel>
-									<Select
-										onValueChange={field.onChange}
-										defaultValue={field.value}>
-										<FormControl>
-											<SelectTrigger>
-												<SelectValue placeholder='Select an transaction type' />
-											</SelectTrigger>
-										</FormControl>
-										<SelectContent>
-											{transactionTypes.map((type) => (
-												<SelectItem
-													key={type}
-													value={type}
-													className='capitalize'>
-													{type}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
+									<FormLabel>Payee</FormLabel>
+									<FormControl>
+										<Input
+											disabled={isPending}
+											placeholder='e.g. Kroger, QT, Target...'
+											{...field}
+										/>
+									</FormControl>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -225,24 +241,7 @@ export function NewTransactionSheet({ id, defaultValues }: Props) {
 								</FormItem>
 							)}
 						/>
-						<FormField
-							name='amount'
-							control={form.control}
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Amount</FormLabel>
-									<FormControl>
-										<Input
-											type='number'
-											disabled={isPending}
-											placeholder='100.00'
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+
 						<Button
 							className='w-full'
 							disabled={isPending}>

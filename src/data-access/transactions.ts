@@ -1,42 +1,33 @@
 import { db } from '@/server/db/index'
-import { transactions } from '@/server/db/schema'
-import { asc, desc, eq } from 'drizzle-orm'
+import { accounts, categories, transactions } from '@/server/db/schema'
+import { and, desc, eq } from 'drizzle-orm'
 import { nanoid } from 'nanoid'
 
-import { type TransactionType } from '@/lib/types'
-
 type createTransactionParams = {
-	name: string
-	type: TransactionType
+	amount: number
+	payee: string
+	date: Date
 	accountId: string
 	categoryId: string
-	userId: string
-	plaidId: string
-	amount: number
 }
 
 export async function createTransaction({
-	name,
-	type,
+	date,
+	payee,
 	accountId,
 	categoryId,
-	userId,
-	plaidId,
 	amount
 }: createTransactionParams) {
 	try {
 		await db.insert(transactions).values({
 			id: nanoid(),
-			name: name,
-			type: type,
-			accountId: accountId,
-			userId: userId,
-			categoryId: categoryId,
-			plaidId: plaidId,
 			amount: amount,
-			createdAt: new Date(),
-			updatedAt: new Date()
+			payee: payee,
+			date: date,
+			accountId: accountId,
+			categoryId: categoryId
 		})
+		console.log('Transaction created', date)
 	} catch (error) {
 		console.error('Error creating transaction', error)
 		throw error
@@ -44,11 +35,27 @@ export async function createTransaction({
 }
 
 export async function getTransactions(userId: string) {
-	const transaction = await db.query.transactions.findMany({
-		where: eq(transactions.userId, userId),
-		orderBy: [desc(transactions.createdAt)]
-	})
-
+	const transaction = await db
+		.select({
+			id: transactions.id,
+			amount: transactions.amount,
+			payee: transactions.payee,
+			date: transactions.date,
+			account: accounts.name,
+			accountId: transactions.accountId,
+			category: categories.name,
+			categoryId: transactions.categoryId
+		})
+		.from(transactions)
+		.innerJoin(accounts, eq(transactions.accountId, accounts.id))
+		.leftJoin(categories, eq(transactions.categoryId, categories.id))
+		.where(
+			and(
+				accounts.id ? eq(transactions.accountId, accounts.id) : undefined,
+				eq(accounts.userId, userId)
+			)
+		)
+		.orderBy(desc(transactions.date))
 	return { transaction }
 }
 

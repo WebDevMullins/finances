@@ -18,9 +18,7 @@ function generateRandomAccountsData(numAccounts: number) {
 				'investment',
 				'loan'
 			]),
-			balance: Number(faker.finance.amount()),
-			createdAt: faker.date.past(),
-			updatedAt: faker.date.recent()
+			balance: Number(faker.finance.amount())
 		}
 		accountsData.push(account)
 	}
@@ -36,15 +34,11 @@ function generateRandomTransactionsData(
 	for (let i = 1; i <= numTransactions; i++) {
 		const transaction: Transaction = {
 			id: `transaction_${i}`,
-			userId: userId,
+			amount: Number(faker.finance.amount()),
+			date: faker.date.recent(),
 			accountId: faker.helpers.arrayElement(accountsData).id,
 			categoryId: faker.helpers.arrayElement(categoriesData).id,
-			plaidId: faker.string.numeric(10),
-			name: faker.finance.transactionDescription(),
-			type: faker.helpers.arrayElement(['income', 'expense']),
-			amount: Number(faker.finance.amount()),
-			createdAt: faker.date.past(),
-			updatedAt: faker.date.recent()
+			payee: faker.finance.transactionDescription()
 		}
 		transactionsData.push(transaction)
 	}
@@ -57,9 +51,7 @@ function generateRandomCategoriesData(numCategories: number) {
 		const category: Category = {
 			id: `category_${i}`,
 			userId: userId,
-			name: faker.finance.transactionType(),
-			createdAt: faker.date.past(),
-			updatedAt: faker.date.recent()
+			name: faker.commerce.product()
 		}
 		categoriesData.push(category)
 	}

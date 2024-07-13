@@ -36,7 +36,7 @@ export function TransactionsTableRowActions<TData>({
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align='end'>
-				<DropdownMenuLabel>{transaction.name}</DropdownMenuLabel>
+				<DropdownMenuLabel>{transaction.payee}</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem>View transaction details</DropdownMenuItem>
 				<DropdownMenuSeparator />

@@ -32,7 +32,7 @@ export const columns: ColumnDef<Transaction>[] = [
 		enableHiding: false
 	},
 	{
-		accessorKey: 'createdAt',
+		accessorKey: 'date',
 		header: ({ column }) => (
 			<DataTableColumnHeader
 				column={column}
@@ -40,7 +40,7 @@ export const columns: ColumnDef<Transaction>[] = [
 			/>
 		),
 		cell: ({ row }) => {
-			const createdAt = row.getValue('createdAt')
+			const createdAt = row.getValue('date')
 
 			const formattedDate = createdAt
 				? new Date(createdAt as string).toLocaleDateString('en-us')
@@ -56,33 +56,33 @@ export const columns: ColumnDef<Transaction>[] = [
 		}
 	},
 	{
-		accessorKey: 'name',
+		accessorKey: 'payee',
 		header: ({ column }) => (
 			<DataTableColumnHeader
 				column={column}
-				title='Name'
+				title='Payee'
 			/>
 		),
 		cell: ({ row }) => {
 			return (
 				<div className='flex space-x-2'>
 					<span className='max-w-[500px] truncate font-medium'>
-						{row.getValue('name')}
+						{row.getValue('payee')}
 					</span>
 				</div>
 			)
 		}
 	},
-	{
-		accessorKey: 'type',
-		header: ({ column }) => (
-			<DataTableColumnHeader
-				column={column}
-				title='Type'
-			/>
-		),
-		cell: ({ row }) => <div className='capitalize'>{row.getValue('type')}</div>
-	},
+	// {
+	// 	accessorKey: 'type',
+	// 	header: ({ column }) => (
+	// 		<DataTableColumnHeader
+	// 			column={column}
+	// 			title='Type'
+	// 		/>
+	// 	),
+	// 	cell: ({ row }) => <div className='capitalize'>{row.getValue('type')}</div>
+	// },
 	{
 		accessorKey: 'amount',
 		header: ({ column }) => (
