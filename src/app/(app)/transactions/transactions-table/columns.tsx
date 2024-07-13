@@ -73,16 +73,18 @@ export const columns: ColumnDef<Transaction>[] = [
 			)
 		}
 	},
-	// {
-	// 	accessorKey: 'type',
-	// 	header: ({ column }) => (
-	// 		<DataTableColumnHeader
-	// 			column={column}
-	// 			title='Type'
-	// 		/>
-	// 	),
-	// 	cell: ({ row }) => <div className='capitalize'>{row.getValue('type')}</div>
-	// },
+	{
+		accessorKey: 'category',
+		header: ({ column }) => (
+			<DataTableColumnHeader
+				column={column}
+				title='Category'
+			/>
+		),
+		cell: ({ row }) => (
+			<div className='capitalize'>{row.getValue('category')}</div>
+		)
+	},
 	{
 		accessorKey: 'amount',
 		header: ({ column }) => (
