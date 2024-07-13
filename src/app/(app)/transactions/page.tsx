@@ -29,7 +29,7 @@ export default async function TransactionsPage() {
 					<DataTable
 						columns={columns}
 						data={transactionData?.transaction as Transaction[]}
-						filterKey='name'
+						filterKey='payee'
 					/>
 				</div>
 			</div>

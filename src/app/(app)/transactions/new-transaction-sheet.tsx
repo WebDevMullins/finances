@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { format } from 'date-fns'
-import { CalendarIcon, Trash2Icon } from 'lucide-react'
+import { Trash2Icon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -8,7 +7,6 @@ import { z } from 'zod'
 import { useServerAction } from 'zsa-react'
 
 import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
 import {
 	Form,
 	FormControl,
@@ -18,11 +16,6 @@ import {
 	FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger
-} from '@/components/ui/popover'
 import {
 	Select,
 	SelectContent,
@@ -201,7 +194,7 @@ export function NewTransactionSheet({ id, defaultValues }: Props) {
 											{accounts.map((account) => (
 												<SelectItem
 													key={account.id}
-													value={account.name}
+													value={account.id}
 													className='capitalize'>
 													{account.name}
 												</SelectItem>
@@ -230,7 +223,7 @@ export function NewTransactionSheet({ id, defaultValues }: Props) {
 											{categories.map((category) => (
 												<SelectItem
 													key={category.id}
-													value={category.name}
+													value={category.id}
 													className='capitalize'>
 													{category.name}
 												</SelectItem>

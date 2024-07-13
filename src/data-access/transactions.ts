@@ -12,11 +12,11 @@ type createTransactionParams = {
 }
 
 export async function createTransaction({
-	date,
 	payee,
+	amount,
+	date,
 	accountId,
-	categoryId,
-	amount
+	categoryId
 }: createTransactionParams) {
 	try {
 		await db.insert(transactions).values({
@@ -27,7 +27,6 @@ export async function createTransaction({
 			accountId: accountId,
 			categoryId: categoryId
 		})
-		console.log('Transaction created', date)
 	} catch (error) {
 		console.error('Error creating transaction', error)
 		throw error
