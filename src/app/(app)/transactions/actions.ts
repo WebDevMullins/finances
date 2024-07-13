@@ -14,15 +14,15 @@ export const createTransactionAction = authenticatedAction
 	.createServerAction()
 	.input(
 		z.object({
-			amount: z.number().min(1),
+			amount: z.number(),
 			payee: z.string().min(1),
 			date: z.coerce.date(),
 			accountId: z.string().min(1),
 			categoryId: z.string().min(1)
 		})
 	)
-	.onError(async () => {
-		console.error('Error creating transaction')
+	.onError(async (error) => {
+		console.error('Error creating transaction', error)
 	})
 	.handler(async ({ input }) => {
 		try {

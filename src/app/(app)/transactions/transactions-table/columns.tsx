@@ -5,7 +5,9 @@ import { type ColumnDef } from '@tanstack/react-table'
 import { type Transaction } from '@/lib/types'
 
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-headers'
+import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
+import { formatCurrency } from '@/lib/utils'
 import { TransactionsTableRowActions } from './transactions-table-row-actions'
 
 export const columns: ColumnDef<Transaction>[] = [
@@ -74,6 +76,18 @@ export const columns: ColumnDef<Transaction>[] = [
 		}
 	},
 	{
+		accessorKey: 'account',
+		header: ({ column }) => (
+			<DataTableColumnHeader
+				column={column}
+				title='Account'
+			/>
+		),
+		cell: ({ row }) => (
+			<div className='capitalize'>{row.getValue('account')}</div>
+		)
+	},
+	{
 		accessorKey: 'category',
 		header: ({ column }) => (
 			<DataTableColumnHeader
@@ -97,12 +111,18 @@ export const columns: ColumnDef<Transaction>[] = [
 			const amount = parseFloat(row.getValue('amount'))
 
 			// Format the amount as a dollar amount
-			const formatted = new Intl.NumberFormat('en-US', {
-				style: 'currency',
-				currency: 'USD'
-			}).format(amount)
+			// const formatted = new Intl.NumberFormat('en-US', {
+			// 	style: 'currency',
+			// 	currency: 'USD'
+			// }).format(amount)
 
-			return <div className='font-medium'>{formatted}</div>
+			return (
+				<Badge
+					variant={amount < 0 ? 'expense' : 'income'}
+					className='px-3.5 py-2.5 text-xs font-medium'>
+					{formatCurrency(amount)}
+				</Badge>
+			)
 		}
 	},
 	{

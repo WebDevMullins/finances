@@ -11,12 +11,11 @@ type AccountType = 'checking' | 'savings' | 'credit' | 'investment' | 'loan'
 
 export type Transaction = {
 	id: string
+	date: Date
+	payee: string
+	amount: number
 	accountId: string
 	categoryId: string
-	payee: string
-	// type: TransactionType
-	amount: number
-	date: Date
 }
 
 export type TransactionType = 'income' | 'expense'

@@ -33,7 +33,9 @@ import {
 
 import type { Account, Category } from '@/lib/types'
 
+import { AmountInput } from '@/components/amount-input'
 import { DatePicker } from '@/components/date-picker'
+import { convertToMiliunits } from '@/lib/utils'
 import { getAccountsAction } from '../accounts/actions'
 import { getCategoriesAction } from '../categories/actions'
 import { createTransactionAction } from './actions'
@@ -47,9 +49,9 @@ type Props = {
 }
 
 const formSchema = z.object({
-	amount: z.coerce.number(),
-	payee: z.string().min(1),
 	date: z.coerce.date(),
+	amount: z.string(),
+	payee: z.string(),
 	accountId: z.string(),
 	categoryId: z.string()
 })
@@ -90,19 +92,23 @@ export function NewTransactionSheet({ id, defaultValues }: Props) {
 	}, [])
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
-		await execute(values)
+		const amount = parseFloat(values.amount)
+		const amountInMiliunits = convertToMiliunits(amount)
+
+		await execute({
+			...values,
+			amount: amountInMiliunits
+		})
 
 		if (error) {
 			console.error('Error creating transaction', error)
 			toast.error('Error creating transaction')
-			console.log('values', values)
 			return
 		}
 
 		onClose()
 		toast.success('Transaction created')
-		form.reset({ payee: '' })
-		console.log('values', values)
+		form.reset(defaultValues)
 	}
 
 	const handleDelete = () => {
@@ -148,10 +154,9 @@ export function NewTransactionSheet({ id, defaultValues }: Props) {
 								<FormItem>
 									<FormLabel>Amount</FormLabel>
 									<FormControl>
-										<Input
-											type='number'
+										<AmountInput
 											disabled={isPending}
-											placeholder='100.00'
+											placeholder='$0.00'
 											{...field}
 										/>
 									</FormControl>

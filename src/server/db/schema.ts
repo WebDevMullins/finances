@@ -3,8 +3,8 @@
 
 import { relations } from 'drizzle-orm'
 import {
+	integer,
 	pgTableCreator,
-	real,
 	text,
 	timestamp,
 	varchar
@@ -35,7 +35,7 @@ export const AccountSchema = createInsertSchema(accounts)
 
 export const transactions = createTable('transactions', {
 	id: text('id').primaryKey(),
-	amount: real('amount').notNull(),
+	amount: integer('amount').notNull(),
 	payee: text('payee').notNull(),
 	date: timestamp('date', { mode: 'date' }).notNull(),
 	accountId: text('account_id')
@@ -43,9 +43,11 @@ export const transactions = createTable('transactions', {
 			onDelete: 'cascade'
 		})
 		.notNull(),
-	categoryId: text('category_id').references(() => categories.id, {
-		onDelete: 'set null'
-	})
+	categoryId: text('category_id')
+		.references(() => categories.id, {
+			onDelete: 'set null'
+		})
+		.notNull()
 })
 
 export const transactionsRelations = relations(transactions, ({ one }) => ({
