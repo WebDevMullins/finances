@@ -3,6 +3,7 @@
 
 import { relations } from 'drizzle-orm'
 import {
+	boolean,
 	integer,
 	pgTableCreator,
 	text,
@@ -24,7 +25,8 @@ export const accounts = createTable('accounts', {
 	id: text('id').primaryKey(),
 	userId: text('user_id').notNull(),
 	plaidId: text('plaid_id').notNull(),
-	name: text('name').notNull()
+	name: text('name').notNull(),
+	startingBalance: integer('starting_balance').notNull()
 })
 
 export const accountsRelations = relations(accounts, ({ many }) => ({
@@ -43,11 +45,9 @@ export const transactions = createTable('transactions', {
 			onDelete: 'cascade'
 		})
 		.notNull(),
-	categoryId: text('category_id')
-		.references(() => categories.id, {
-			onDelete: 'set null'
-		})
-		.notNull()
+	categoryId: text('category_id').references(() => categories.id, {
+		onDelete: 'set null'
+	})
 })
 
 export const transactionsRelations = relations(transactions, ({ one }) => ({
@@ -67,7 +67,6 @@ export const TransactionSchema = createInsertSchema(transactions, {
 
 export const categories = createTable('categories', {
 	id: text('id').primaryKey(),
-	userId: text('user_id').notNull(),
 	name: varchar('name').notNull()
 })
 
@@ -76,3 +75,38 @@ export const categoriesRelations = relations(categories, ({ many }) => ({
 }))
 
 export const CategorySchema = createInsertSchema(categories)
+
+export const bills = createTable('bills', {
+	id: text('id').primaryKey(),
+	name: text('name').notNull(),
+	amount: integer('amount').notNull(),
+	dueDate: timestamp('due_date').notNull(),
+	isReccuring: boolean('is_reccuring').notNull(),
+	isPaid: boolean('is_paid').notNull(),
+	categoryId: text('category_id')
+		.references(() => categories.id, {
+			onDelete: 'set null'
+		})
+		.notNull(),
+	transactionId: text('transaction_id')
+		.references(() => transactions.id, {
+			onDelete: 'set null'
+		})
+		.notNull()
+})
+
+export const billsRelations = relations(bills, ({ one }) => ({
+	category: one(categories, {
+		fields: [bills.categoryId],
+		references: [categories.id]
+	}),
+	transaction: one(transactions, {
+		fields: [bills.transactionId],
+		references: [transactions.id]
+	})
+}))
+
+// Create insert schema for bills
+export const BillSchema = createInsertSchema(bills, {
+	dueDate: z.coerce.date()
+})

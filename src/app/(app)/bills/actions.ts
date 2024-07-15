@@ -18,7 +18,7 @@ export const createTransactionAction = authenticatedAction
 			payee: z.string().min(1),
 			date: z.coerce.date(),
 			accountId: z.string().min(1),
-			categoryId: z.string().optional()
+			categoryId: z.string().min(1)
 		})
 	)
 	.onError(async (error) => {
@@ -31,7 +31,7 @@ export const createTransactionAction = authenticatedAction
 				payee: input.payee,
 				date: input.date,
 				accountId: input.accountId,
-				categoryId: input.categoryId ?? ''
+				categoryId: input.categoryId
 			})
 		} catch (error) {
 			console.error('Error creating transaction', error)

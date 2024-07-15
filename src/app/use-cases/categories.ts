@@ -1,7 +1,7 @@
 import { deleteCategory, getCategories } from '@/data-access/categories'
 
-export async function getCategoriesUseCase(userId: string) {
-	const categories = await getCategories(userId)
+export async function getCategoriesUseCase() {
+	const categories = await getCategories()
 
 	return categories
 }

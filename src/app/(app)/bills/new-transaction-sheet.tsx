@@ -53,7 +53,7 @@ const formSchema = z.object({
 	amount: z.string(),
 	payee: z.string(),
 	accountId: z.string(),
-	categoryId: z.string().optional()
+	categoryId: z.string()
 })
 
 type Transaction = z.input<typeof formSchema>
@@ -140,6 +140,9 @@ export function NewTransactionSheet({ id, defaultValues }: Props) {
 										onChange={field.onChange}
 										disabled={isPending}
 									/>
+									{/* <FormDescription>
+										Your date of birth is used to calculate your age.
+									</FormDescription> */}
 									<FormMessage />
 								</FormItem>
 							)}

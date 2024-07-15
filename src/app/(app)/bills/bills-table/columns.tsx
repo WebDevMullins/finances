@@ -110,6 +110,12 @@ export const columns: ColumnDef<Transaction>[] = [
 		cell: ({ row }) => {
 			const amount = parseFloat(row.getValue('amount'))
 
+			// Format the amount as a dollar amount
+			// const formatted = new Intl.NumberFormat('en-US', {
+			// 	style: 'currency',
+			// 	currency: 'USD'
+			// }).format(amount)
+
 			return (
 				<Badge
 					variant={amount < 0 ? 'expense' : 'income'}

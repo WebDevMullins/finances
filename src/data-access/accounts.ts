@@ -1,33 +1,28 @@
 import { db } from '@/server/db/index'
-import { accounts } from '@/server/db/schema'
-import { eq } from 'drizzle-orm'
+import { accounts, transactions } from '@/server/db/schema'
+import { eq, sql } from 'drizzle-orm'
 import { nanoid } from 'nanoid'
 
 type createAccountParams = {
 	name: string
-	type: string
 	userId: string
 	plaidId: string
-	balance: number
+	startingBalance: number
 }
 
 export async function createAccount({
 	name,
-	type,
 	userId,
 	plaidId,
-	balance
+	startingBalance
 }: createAccountParams) {
 	try {
 		await db.insert(accounts).values({
 			id: nanoid(),
 			name: name,
-			type: type,
 			userId: userId,
 			plaidId: plaidId,
-			balance: balance,
-			createdAt: new Date(),
-			updatedAt: new Date()
+			startingBalance: startingBalance
 		})
 	} catch (error) {
 		console.error('Error creating account', error)
@@ -36,9 +31,23 @@ export async function createAccount({
 }
 
 export async function getAccounts(userId: string) {
-	const account = await db.query.accounts.findMany({
-		where: eq(accounts.userId, userId)
-	})
+	const account = await db
+		.select({
+			id: accounts.id,
+			name: accounts.name,
+			userId: accounts.userId,
+			plaidId: accounts.plaidId,
+			startingBalance: accounts.startingBalance,
+			balance:
+				sql`${accounts.startingBalance} + SUM(${transactions.amount})`.as(
+					'balance'
+				)
+		})
+		.from(accounts)
+		.leftJoin(transactions, eq(transactions.accountId, accounts.id))
+		.where(eq(accounts.userId, userId))
+		.groupBy(accounts.id, accounts.name)
+		.orderBy(accounts.name)
 
 	return { account }
 }

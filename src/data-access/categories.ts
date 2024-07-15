@@ -1,21 +1,17 @@
 import { db } from '@/server/db/index'
-import { categories } from '@/server/db/schema'
-import { eq } from 'drizzle-orm'
+import { categories, transactions } from '@/server/db/schema'
+import { eq, sql } from 'drizzle-orm'
 import { nanoid } from 'nanoid'
 
 type createCategoryParams = {
 	name: string
-	userId: string
 }
 
-export async function createCategory({ name, userId }: createCategoryParams) {
+export async function createCategory({ name }: createCategoryParams) {
 	try {
 		await db.insert(categories).values({
 			id: nanoid(),
-			name: name,
-			userId: userId,
-			createdAt: new Date(),
-			updatedAt: new Date()
+			name: name
 		})
 	} catch (error) {
 		console.error('Error creating category', error)
@@ -23,11 +19,17 @@ export async function createCategory({ name, userId }: createCategoryParams) {
 	}
 }
 
-export async function getCategories(userId: string) {
-	const category = await db.query.categories.findMany({
-		where: eq(categories.userId, userId)
-	})
-
+export async function getCategories() {
+	const category = await db
+		.select({
+			id: categories.id,
+			name: categories.name,
+			balance: sql`SUM(${transactions.amount})`.as('balance')
+		})
+		.from(categories)
+		.leftJoin(transactions, eq(transactions.categoryId, categories.id))
+		.groupBy(categories.id, categories.name)
+		.orderBy(categories.name)
 	return { category }
 }
 

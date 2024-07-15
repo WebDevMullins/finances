@@ -5,6 +5,7 @@ import { toast } from 'sonner'
 import { z } from 'zod'
 import { useServerAction } from 'zsa-react'
 
+import { AmountInput } from '@/components/amount-input'
 import { Button } from '@/components/ui/button'
 import {
 	Form,
@@ -16,13 +17,6 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue
-} from '@/components/ui/select'
-import {
 	Sheet,
 	SheetContent,
 	SheetDescription,
@@ -30,6 +24,7 @@ import {
 	SheetTitle
 } from '@/components/ui/sheet'
 
+import { convertToMiliunits } from '@/lib/utils'
 import { createAccountAction } from './actions'
 import { useNewAccount } from './hooks/use-new-account'
 
@@ -42,13 +37,10 @@ type Props = {
 
 const formSchema = z.object({
 	name: z.string().min(1),
-	type: z.enum(['checking', 'savings', 'credit', 'investment', 'loan']),
-	balance: z.coerce.number()
+	startingBalance: z.string()
 })
 
 type Account = z.input<typeof formSchema>
-
-const accountTypes = ['checking', 'savings', 'credit', 'investment', 'loan']
 
 export function NewAccountSheet({ id, defaultValues }: Props) {
 	const { isOpen, onClose } = useNewAccount()
@@ -61,7 +53,13 @@ export function NewAccountSheet({ id, defaultValues }: Props) {
 	})
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
-		await execute(values)
+		const startingBalance = parseFloat(values.startingBalance)
+		const startingBalanceInMiliunits = convertToMiliunits(startingBalance)
+
+		await execute({
+			...values,
+			startingBalance: startingBalanceInMiliunits
+		})
 
 		if (error) {
 			console.error('Error creating account', error)
@@ -111,45 +109,15 @@ export function NewAccountSheet({ id, defaultValues }: Props) {
 							)}
 						/>
 						<FormField
-							name='type'
+							name='startingBalance'
 							control={form.control}
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Type</FormLabel>
-									<Select
-										onValueChange={field.onChange}
-										defaultValue={field.value}>
-										<FormControl>
-											<SelectTrigger>
-												<SelectValue placeholder='Select an account type' />
-											</SelectTrigger>
-										</FormControl>
-										<SelectContent>
-											{accountTypes.map((type) => (
-												<SelectItem
-													key={type}
-													value={type}
-													className='capitalize'>
-													{type}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							name='balance'
-							control={form.control}
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Balance</FormLabel>
+									<FormLabel>Starting Balance</FormLabel>
 									<FormControl>
-										<Input
-											type='number'
+										<AmountInput
 											disabled={isPending}
-											placeholder='100.00'
+											placeholder='$0.00'
 											{...field}
 										/>
 									</FormControl>

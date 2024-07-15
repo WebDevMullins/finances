@@ -7,6 +7,8 @@ import { type Account } from '@/lib/types'
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-headers'
 import { Checkbox } from '@/components/ui/checkbox'
 
+import { Badge } from '@/components/ui/badge'
+import { formatCurrency } from '@/lib/utils'
 import { AccountsTableRowActions } from './accounts-table-row-actions'
 
 export const columns: ColumnDef<Account>[] = [
@@ -41,27 +43,14 @@ export const columns: ColumnDef<Account>[] = [
 			/>
 		),
 		cell: ({ row }) => {
-			// const label = labels.find((label) => label.value === row.original.label)
-
 			return (
 				<div className='flex space-x-2'>
-					{/* {label && <Badge variant="outline">{label.label}</Badge>} */}
 					<span className='max-w-[500px] truncate font-medium'>
 						{row.getValue('name')}
 					</span>
 				</div>
 			)
 		}
-	},
-	{
-		accessorKey: 'type',
-		header: ({ column }) => (
-			<DataTableColumnHeader
-				column={column}
-				title='Type'
-			/>
-		),
-		cell: ({ row }) => <div className='capitalize'>{row.getValue('type')}</div>
 	},
 	{
 		accessorKey: 'balance',
@@ -72,15 +61,19 @@ export const columns: ColumnDef<Account>[] = [
 			/>
 		),
 		cell: ({ row }) => {
-			const balance = parseFloat(row.getValue('balance'))
+			let balance = parseFloat(row.getValue('balance'))
 
-			// Format the amount as a dollar amount
-			const formatted = new Intl.NumberFormat('en-US', {
-				style: 'currency',
-				currency: 'USD'
-			}).format(balance)
+			if (isNaN(balance)) {
+				balance = row.original.startingBalance
+			}
 
-			return <div className='font-medium'>{formatted}</div>
+			return (
+				<Badge
+					variant={balance < 0 ? 'expense' : 'income'}
+					className='px-3.5 py-2.5 text-xs font-medium'>
+					{formatCurrency(balance)}
+				</Badge>
+			)
 		}
 	},
 	{

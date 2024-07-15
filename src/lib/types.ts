@@ -3,11 +3,8 @@ export type Account = {
 	userId: string
 	plaidId: string
 	name: string
-	type: AccountType
-	balance: number
+	startingBalance: number
 }
-
-type AccountType = 'checking' | 'savings' | 'credit' | 'investment' | 'loan'
 
 export type Transaction = {
 	id: string
@@ -15,13 +12,10 @@ export type Transaction = {
 	payee: string
 	amount: number
 	accountId: string
-	categoryId: string
+	categoryId?: string | null
 }
-
-export type TransactionType = 'income' | 'expense'
 
 export type Category = {
 	id: string
-	userId: string
 	name: string
 }

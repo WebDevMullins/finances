@@ -15,8 +15,7 @@ export const createAccountAction = authenticatedAction
 	.input(
 		z.object({
 			name: z.string().min(1),
-			type: z.enum(['checking', 'savings', 'credit', 'investment', 'loan']),
-			balance: z.number().min(1)
+			startingBalance: z.number().min(1)
 		})
 	)
 	.onError(async () => {
@@ -26,10 +25,9 @@ export const createAccountAction = authenticatedAction
 		try {
 			await createAccount({
 				name: input.name,
-				type: input.type,
 				userId: ctx.userId!,
 				plaidId: '123',
-				balance: input.balance
+				startingBalance: input.startingBalance
 			})
 		} catch (error) {
 			console.error('Error creating account', error)
@@ -41,8 +39,8 @@ export const createAccountAction = authenticatedAction
 
 export const getAccountsAction = authenticatedAction
 	.createServerAction()
-	.onError(async () => {
-		console.error('Error fetching accounts')
+	.onError(async (err) => {
+		console.error('Error fetching accounts', err)
 	})
 	.handler(async ({ ctx }) => {
 		const accounts = await getAccountsUseCase(ctx.userId!)

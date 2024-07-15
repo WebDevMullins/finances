@@ -20,11 +20,10 @@ export const createCategoryAction = authenticatedAction
 	.onError(async () => {
 		console.error('Error creating category')
 	})
-	.handler(async ({ input, ctx }) => {
+	.handler(async ({ input }) => {
 		try {
 			await createCategory({
-				name: input.name,
-				userId: ctx.userId!
+				name: input.name
 			})
 		} catch (error) {
 			console.error('Error creating category', error)
@@ -36,12 +35,11 @@ export const createCategoryAction = authenticatedAction
 
 export const getCategoriesAction = authenticatedAction
 	.createServerAction()
-	// .input(z.string())
 	.onError(async () => {
 		console.error('Error fetching categories')
 	})
-	.handler(async ({ ctx }) => {
-		const categories = await getCategoriesUseCase(ctx.userId!)
+	.handler(async () => {
+		const categories = await getCategoriesUseCase()
 		return categories
 	})
 
