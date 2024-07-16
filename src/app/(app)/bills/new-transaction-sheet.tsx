@@ -39,7 +39,7 @@ import { convertToMiliunits } from '@/lib/utils'
 import { getAccountsAction } from '../accounts/actions'
 import { getCategoriesAction } from '../categories/actions'
 import { createTransactionAction } from './actions'
-import { useNewTransaction } from './hooks/use-new-transaction'
+import { useNewTransaction } from './hooks/use-new-bill'
 
 type Props = {
 	id?: string

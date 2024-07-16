@@ -19,3 +19,14 @@ export type Category = {
 	id: string
 	name: string
 }
+
+export type Bill = {
+	id: string
+	payee: string
+	amount: number
+	dueDate: Date
+	isRecurring: boolean
+	isPaid: boolean
+	categoryId: string
+	transactionId: string
+}

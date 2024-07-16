@@ -3,67 +3,66 @@
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
-import {
-	deleteTransactionUseCase,
-	getTransactionsUseCase
-} from '@/app/use-cases/transactions'
-import { createTransaction } from '@/data-access/transactions'
+import { deleteBillUseCase, getBillsUseCase } from '@/app/use-cases/bills'
+import { createBill } from '@/data-access/bills'
 import { authenticatedAction } from '@/lib/safe-action'
 
-export const createTransactionAction = authenticatedAction
+export const createBillAction = authenticatedAction
 	.createServerAction()
 	.input(
 		z.object({
 			amount: z.number(),
 			payee: z.string().min(1),
-			date: z.coerce.date(),
-			accountId: z.string().min(1),
+			dueDate: z.coerce.date(),
+			isRecurring: z.boolean(),
+			isPaid: z.boolean(),
 			categoryId: z.string().min(1)
 		})
 	)
 	.onError(async (error) => {
-		console.error('Error creating transaction', error)
+		console.error('Error creating bill', error)
 	})
 	.handler(async ({ input }) => {
 		try {
-			await createTransaction({
+			await createBill({
 				amount: input.amount,
 				payee: input.payee,
-				date: input.date,
-				accountId: input.accountId,
+				dueDate: input.dueDate,
+				isRecurring: input.isRecurring,
+				isPaid: input.isPaid,
 				categoryId: input.categoryId
 			})
 		} catch (error) {
-			console.error('Error creating transaction', error)
+			console.error('Error creating bill', error)
 			throw error
 		}
 
-		revalidatePath('/transactions')
+		revalidatePath('/bills')
 	})
 
-export const getTransactionsAction = authenticatedAction
+export const getBillsAction = authenticatedAction
 	.createServerAction()
-	.onError(async () => {
-		console.error('Error fetching transactions')
+	.onError(async (err) => {
+		console.error('Error fetching bills', err)
 	})
 	.handler(async ({ ctx }) => {
-		const transactions = await getTransactionsUseCase(ctx.userId!)
-		return transactions
+		const bills = await getBillsUseCase(ctx.userId!)
+		return bills
 	})
 
-export const deleteTransactionAction = authenticatedAction
+export const deleteBillAction = authenticatedAction
 	.createServerAction()
 	.input(z.string())
 	.onError(async () => {
-		console.error('Error deleting transaction')
+		console.error('Error deleting bill')
 	})
 	.handler(async ({ input }) => {
 		try {
-			await deleteTransactionUseCase(input)
+			await deleteBillUseCase(input)
 		} catch (err) {
-			console.error('Error deleting transaction', err)
+			console.error('Error deleting bill', err)
 			throw err
 		}
 
-		revalidatePath('/transactions')
+		revalidatePath('/bills')
 	})

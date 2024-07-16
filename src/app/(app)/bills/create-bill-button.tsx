@@ -4,10 +4,10 @@ import { PlusCircleIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 
-import { useNewTransaction } from './hooks/use-new-transaction'
+import { useNewBill } from './hooks/use-new-bill'
 
-export default function CreateTransactionButton() {
-	const { onOpen } = useNewTransaction()
+export default function CreateBillButton() {
+	const { onOpen } = useNewBill()
 
 	return (
 		<Button

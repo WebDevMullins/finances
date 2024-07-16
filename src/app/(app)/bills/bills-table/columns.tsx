@@ -2,15 +2,15 @@
 
 import { type ColumnDef } from '@tanstack/react-table'
 
-import { type Transaction } from '@/lib/types'
+import { type Bill } from '@/lib/types'
 
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-headers'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { formatCurrency } from '@/lib/utils'
-import { TransactionsTableRowActions } from './transactions-table-row-actions'
+import { TransactionsTableRowActions } from './bills-table-row-actions'
 
-export const columns: ColumnDef<Transaction>[] = [
+export const columns: ColumnDef<Bill>[] = [
 	{
 		id: 'select',
 		header: ({ table }) => (
@@ -34,15 +34,15 @@ export const columns: ColumnDef<Transaction>[] = [
 		enableHiding: false
 	},
 	{
-		accessorKey: 'date',
+		accessorKey: 'dueDate',
 		header: ({ column }) => (
 			<DataTableColumnHeader
 				column={column}
-				title='Date'
+				title='Due Date'
 			/>
 		),
 		cell: ({ row }) => {
-			const createdAt = row.getValue('date')
+			const createdAt = row.getValue('dueDate')
 
 			const formattedDate = createdAt
 				? new Date(createdAt as string).toLocaleDateString('en-us')
@@ -75,16 +75,40 @@ export const columns: ColumnDef<Transaction>[] = [
 			)
 		}
 	},
+	// {
+	// 	accessorKey: 'account',
+	// 	header: ({ column }) => (
+	// 		<DataTableColumnHeader
+	// 			column={column}
+	// 			title='Account'
+	// 		/>
+	// 	),
+	// 	cell: ({ row }) => (
+	// 		<div className='capitalize'>{row.getValue('account')}</div>
+	// 	)
+	// },
+	// {
+	// 	accessorKey: 'isRecurring',
+	// 	header: ({ column }) => (
+	// 		<DataTableColumnHeader
+	// 			column={column}
+	// 			title='Recurring'
+	// 		/>
+	// 	),
+	// 	cell: ({ row }) => (
+	// 		<div className='capitalize'>{row.getValue('isRecurring')}</div>
+	// 	)
+	// },
 	{
-		accessorKey: 'account',
+		accessorKey: 'isPaid',
 		header: ({ column }) => (
 			<DataTableColumnHeader
 				column={column}
-				title='Account'
+				title='Paid'
 			/>
 		),
 		cell: ({ row }) => (
-			<div className='capitalize'>{row.getValue('account')}</div>
+			<div className='capitalize'>{row.getValue('isPaid')}</div>
 		)
 	},
 	{
@@ -109,12 +133,6 @@ export const columns: ColumnDef<Transaction>[] = [
 		),
 		cell: ({ row }) => {
 			const amount = parseFloat(row.getValue('amount'))
-
-			// Format the amount as a dollar amount
-			// const formatted = new Intl.NumberFormat('en-US', {
-			// 	style: 'currency',
-			// 	currency: 'USD'
-			// }).format(amount)
 
 			return (
 				<Badge

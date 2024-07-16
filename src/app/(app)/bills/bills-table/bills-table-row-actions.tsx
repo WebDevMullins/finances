@@ -13,8 +13,9 @@ import {
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 
-import { TransactionSchema } from '@/server/db/schema'
-import { DeleteTransactionItem } from './delete-transaction-item'
+import { BillSchema } from '@/server/db/schema'
+import { DeleteBillItem } from './delete-bill-item'
+
 
 interface DataTableRowActionsProps<TData> {
 	row: Row<TData>
@@ -23,7 +24,7 @@ interface DataTableRowActionsProps<TData> {
 export function TransactionsTableRowActions<TData>({
 	row
 }: DataTableRowActionsProps<TData>) {
-	const transaction = TransactionSchema.parse(row.original)
+	const bill = BillSchema.parse(row.original)
 
 	return (
 		<DropdownMenu>
@@ -36,11 +37,11 @@ export function TransactionsTableRowActions<TData>({
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align='end'>
-				<DropdownMenuLabel>{transaction.payee}</DropdownMenuLabel>
+				<DropdownMenuLabel>{bill.payee}</DropdownMenuLabel>
 				<DropdownMenuSeparator />
-				<DropdownMenuItem>View transaction details</DropdownMenuItem>
+				<DropdownMenuItem>View bill details</DropdownMenuItem>
 				<DropdownMenuSeparator />
-				<DeleteTransactionItem transactionId={transaction.id} />
+				<DeleteBillItem billId={bill.id} />
 			</DropdownMenuContent>
 		</DropdownMenu>
 	)

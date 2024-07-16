@@ -9,9 +9,10 @@ import { cn } from '@/lib/utils'
 
 const links = [
 	{ label: 'Dashboard', href: '/dashboard' },
-	{ label: 'Transactions', href: '/transactions' },
 	{ label: 'Accounts', href: '/accounts' },
+	{ label: 'Bills', href: '/bills' },
 	{ label: 'Categories', href: '/categories' },
+	{ label: 'Transactions', href: '/transactions' },
 	{ label: 'Settings', href: '/settings' }
 ]
 

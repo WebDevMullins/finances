@@ -78,10 +78,10 @@ export const CategorySchema = createInsertSchema(categories)
 
 export const bills = createTable('bills', {
 	id: text('id').primaryKey(),
-	name: text('name').notNull(),
 	amount: integer('amount').notNull(),
+	payee: text('payee').notNull(),
 	dueDate: timestamp('due_date').notNull(),
-	isReccuring: boolean('is_reccuring').notNull(),
+	isRecurring: boolean('is_reccuring').notNull(),
 	isPaid: boolean('is_paid').notNull(),
 	categoryId: text('category_id')
 		.references(() => categories.id, {
@@ -92,7 +92,6 @@ export const bills = createTable('bills', {
 		.references(() => transactions.id, {
 			onDelete: 'set null'
 		})
-		.notNull()
 })
 
 export const billsRelations = relations(bills, ({ one }) => ({
