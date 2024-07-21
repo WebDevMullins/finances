@@ -88,10 +88,9 @@ export const bills = createTable('bills', {
 			onDelete: 'set null'
 		})
 		.notNull(),
-	transactionId: text('transaction_id')
-		.references(() => transactions.id, {
-			onDelete: 'set null'
-		})
+	transactionId: text('transaction_id').references(() => transactions.id, {
+		onDelete: 'set null'
+	})
 })
 
 export const billsRelations = relations(bills, ({ one }) => ({

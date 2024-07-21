@@ -1,5 +1,1 @@
-export const billsOptions = [
-	{
-		
-	}
-]
+export const billsOptions = [{}]

@@ -16,7 +16,6 @@ import {
 import { BillSchema } from '@/server/db/schema'
 import { DeleteBillItem } from './delete-bill-item'
 
-
 interface DataTableRowActionsProps<TData> {
 	row: Row<TData>
 }

@@ -70,7 +70,11 @@ export function DataTable<TData, TValue>({
 
 	return (
 		<div className='min-w-[800px] space-y-4'>
-			<DataTableToolbar table={table} filterKey={filterKey} options={options} />
+			<DataTableToolbar
+				table={table}
+				filterKey={filterKey}
+				options={options}
+			/>
 			<div className='rounded-md border'>
 				<Table>
 					<TableHeader>
