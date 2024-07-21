@@ -12,13 +12,18 @@ import {
 	AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
 import { buttonVariants } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
+import { useState } from 'react'
 
 type Props = {
 	onClick: () => void
 }
 
 export function ConfirmDeleteBillDialog({ onClick }: Props) {
+	const [deleteAll, setDeleteAll] = useState(false)
+	console.log('DeleteAll: ', deleteAll)
+
 	return (
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
@@ -41,6 +46,13 @@ export function ConfirmDeleteBillDialog({ onClick }: Props) {
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>
+					<Checkbox
+						checked={deleteAll}
+						onCheckedChange={(checked) => {
+							setDeleteAll(checked === !deleteAll)
+						}}
+					/>
+					Delete All Recurring Bills
 					<AlertDialogCancel>Cancel</AlertDialogCancel>
 					<AlertDialogAction
 						className={buttonVariants({ variant: 'destructive' })}
