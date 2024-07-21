@@ -8,6 +8,7 @@ import { DataTableColumnHeader } from '@/components/data-table/data-table-column
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { formatCurrency } from '@/lib/utils'
+import { CheckIcon, XIcon } from 'lucide-react'
 import { TransactionsTableRowActions } from './bills-table-row-actions'
 
 export const columns: ColumnDef<Bill>[] = [
@@ -87,18 +88,27 @@ export const columns: ColumnDef<Bill>[] = [
 	// 		<div className='capitalize'>{row.getValue('account')}</div>
 	// 	)
 	// },
-	// {
-	// 	accessorKey: 'isRecurring',
-	// 	header: ({ column }) => (
-	// 		<DataTableColumnHeader
-	// 			column={column}
-	// 			title='Recurring'
-	// 		/>
-	// 	),
-	// 	cell: ({ row }) => (
-	// 		<div className='capitalize'>{row.getValue('isRecurring')}</div>
-	// 	)
-	// },
+	{
+		accessorKey: 'isRecurring',
+		header: ({ column }) => (
+			<DataTableColumnHeader
+				column={column}
+				title='Recurring'
+			/>
+		),
+		cell: ({ row }) => {
+			const value = row.getValue('isRecurring')
+			return (
+				<div className='ml-6'>
+					{value ? (
+						<CheckIcon className='size-4 text-emerald-500' />
+					) : (
+						<XIcon className='size-4 text-red-500' />
+					)}
+				</div>
+			)
+		}
+	},
 	{
 		accessorKey: 'isPaid',
 		header: ({ column }) => (
@@ -107,9 +117,18 @@ export const columns: ColumnDef<Bill>[] = [
 				title='Paid'
 			/>
 		),
-		cell: ({ row }) => (
-			<div className='capitalize'>{row.getValue('isPaid')}</div>
-		)
+		cell: ({ row }) => {
+			const value = row.getValue('isPaid')
+			return (
+				<div className='ml-2'>
+					{value ? (
+						<CheckIcon className='size-4 text-emerald-500' />
+					) : (
+						<XIcon className='size-4 text-red-500' />
+					)}
+				</div>
+			)
+		}
 	},
 	{
 		accessorKey: 'category',
@@ -133,10 +152,11 @@ export const columns: ColumnDef<Bill>[] = [
 		),
 		cell: ({ row }) => {
 			const amount = parseFloat(row.getValue('amount'))
+			const isPaid = row.getValue('isPaid')
 
 			return (
 				<Badge
-					variant={amount < 0 ? 'expense' : 'income'}
+					variant={!isPaid ? 'expense' : 'income'}
 					className='px-3.5 py-2.5 text-xs font-medium'>
 					{formatCurrency(amount)}
 				</Badge>

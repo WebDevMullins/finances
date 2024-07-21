@@ -6,6 +6,8 @@ import { toast } from 'sonner'
 import { z } from 'zod'
 import { useServerAction } from 'zsa-react'
 
+import { AmountInput } from '@/components/amount-input'
+import { DatePicker } from '@/components/date-picker'
 import { Button } from '@/components/ui/button'
 import {
 	Form,
@@ -31,55 +33,54 @@ import {
 	SheetTitle
 } from '@/components/ui/sheet'
 
-import type { Account, Category } from '@/lib/types'
-
-import { AmountInput } from '@/components/amount-input'
-import { DatePicker } from '@/components/date-picker'
+import type { Category } from '@/lib/types'
 import { convertToMiliunits } from '@/lib/utils'
-import { getAccountsAction } from '../accounts/actions'
-import { getCategoriesAction } from '../categories/actions'
-import { createTransactionAction } from './actions'
-import { useNewTransaction } from './hooks/use-new-bill'
 
-type Props = {
-	id?: string
-	defaultValues?: Transaction
-	onSubmit?: SubmitHandler<Transaction>
-	onDelete?: () => void
-}
+import { Checkbox } from '@/components/ui/checkbox'
+// import { getAccountsAction } from '../accounts/actions'
+import { getCategoriesAction } from '../categories/actions'
+import { createBillAction } from './actions'
+import { useNewBill } from './hooks/use-new-bill'
 
 const formSchema = z.object({
-	date: z.coerce.date(),
 	amount: z.string(),
 	payee: z.string(),
-	accountId: z.string(),
+	dueDate: z.coerce.date(),
+	isRecurring: z.boolean().default(false),
 	categoryId: z.string()
 })
 
-type Transaction = z.input<typeof formSchema>
+type FormValues = z.input<typeof formSchema>
 
-export function NewTransactionSheet({ id, defaultValues }: Props) {
-	const { isOpen, onClose } = useNewTransaction()
+type Props = {
+	id?: string
+	defaultValues?: FormValues
+	onSubmit?: SubmitHandler<FormValues>
+	onDelete?: () => void
+}
 
-	const { isPending, execute, error } = useServerAction(createTransactionAction)
+export function NewBillSheet({ id, defaultValues }: Props) {
+	const { isOpen, onClose } = useNewBill()
 
-	const form = useForm<Transaction>({
+	const { isPending, execute, error } = useServerAction(createBillAction)
+
+	const form = useForm<z.input<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: defaultValues
 	})
 
 	const [categories, setCategories] = useState<Category[]>([])
-	const [accounts, setAccounts] = useState<Account[]>([])
+	// const [accounts, setAccounts] = useState<Account[]>([])
 
 	useEffect(() => {
 		async function fetchData() {
-			try {
-				const [accountData] = await getAccountsAction()
-				setAccounts(accountData?.account as Account[])
-			} catch (error) {
-				console.error('Error fetching accounts', error)
-				toast.error('Error fetching accounts')
-			}
+			// try {
+			// 	const [accountData] = await getAccountsAction()
+			// 	setAccounts(accountData?.account as Account[])
+			// } catch (error) {
+			// 	console.error('Error fetching accounts', error)
+			// 	toast.error('Error fetching accounts')
+			// }
 			try {
 				const [categoryData] = await getCategoriesAction()
 				setCategories(categoryData?.category as Category[])
@@ -91,23 +92,24 @@ export function NewTransactionSheet({ id, defaultValues }: Props) {
 		fetchData().catch(console.error)
 	}, [])
 
-	async function onSubmit(values: z.infer<typeof formSchema>) {
+	async function onSubmit(values: FormValues) {
 		const amount = parseFloat(values.amount)
 		const amountInMiliunits = convertToMiliunits(amount)
 
 		await execute({
 			...values,
-			amount: amountInMiliunits
+			amount: amountInMiliunits,
+			isRecurring: values.isRecurring ?? false
 		})
 
 		if (error) {
-			console.error('Error creating transaction', error)
-			toast.error('Error creating transaction')
+			console.error('Error creating bill', error)
+			toast.error('Error creating bill')
 			return
 		}
 
 		onClose()
-		toast.success('Transaction created')
+		toast.success('Bill created')
 		form.reset(defaultValues)
 	}
 
@@ -121,8 +123,8 @@ export function NewTransactionSheet({ id, defaultValues }: Props) {
 			onOpenChange={onClose}>
 			<SheetContent className='space-y-4'>
 				<SheetHeader>
-					<SheetTitle>New Transaction</SheetTitle>
-					<SheetDescription>Create a new transaction</SheetDescription>
+					<SheetTitle>New Bill</SheetTitle>
+					<SheetDescription>Create a new bill</SheetDescription>
 					{error && <div>{error.message}</div>}
 				</SheetHeader>
 				<Form {...form}>
@@ -131,18 +133,15 @@ export function NewTransactionSheet({ id, defaultValues }: Props) {
 						className='space-y-4 pt-4'>
 						<FormField
 							control={form.control}
-							name='date'
+							name='dueDate'
 							render={({ field }) => (
 								<FormItem className='flex flex-col'>
-									<FormLabel>Date</FormLabel>
+									<FormLabel>Due Date</FormLabel>
 									<DatePicker
 										value={field.value}
 										onChange={field.onChange}
 										disabled={isPending}
 									/>
-									{/* <FormDescription>
-										Your date of birth is used to calculate your age.
-									</FormDescription> */}
 									<FormMessage />
 								</FormItem>
 							)}
@@ -182,6 +181,23 @@ export function NewTransactionSheet({ id, defaultValues }: Props) {
 							)}
 						/>
 						<FormField
+							control={form.control}
+							name='isRecurring'
+							render={({ field }) => (
+								<FormItem className='flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4'>
+									<FormControl>
+										<Checkbox
+											checked={field.value}
+											onCheckedChange={field.onChange}
+										/>
+									</FormControl>
+									<div className='space-y-1 leading-none'>
+										<FormLabel>Recurring</FormLabel>
+									</div>
+								</FormItem>
+							)}
+						/>
+						{/* <FormField
 							name='accountId'
 							control={form.control}
 							render={({ field }) => (
@@ -209,7 +225,7 @@ export function NewTransactionSheet({ id, defaultValues }: Props) {
 									<FormMessage />
 								</FormItem>
 							)}
-						/>
+						/> */}
 						<FormField
 							name='categoryId'
 							control={form.control}
@@ -243,7 +259,7 @@ export function NewTransactionSheet({ id, defaultValues }: Props) {
 						<Button
 							className='w-full'
 							disabled={isPending}>
-							{id ? 'Save Changes' : 'Create Transaction'}
+							{id ? 'Save Changes' : 'Create Bill'}
 						</Button>
 						{!!id && (
 							<Button
@@ -253,7 +269,7 @@ export function NewTransactionSheet({ id, defaultValues }: Props) {
 								className='w-full'
 								disabled={isPending}>
 								<Trash2Icon className='mr-2 size-4' />
-								Delete Transaction
+								Delete Bill
 							</Button>
 						)}
 					</form>

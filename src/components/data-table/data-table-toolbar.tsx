@@ -5,19 +5,20 @@ import { CrossIcon, Trash2Icon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-// import { priorities, statuses } from '../data/data'
 
-// import { DataTableFacetedFilter } from './transactions-table-faceted-filter'
+import { DataTableFacetedFilter } from './data-table-faceted-filter'
 import { DataTableViewOptions } from './data-table-view-options'
 
 interface DataTableToolbarProps<TData> {
 	table: Table<TData>
 	filterKey: string
+	options: string[]
 }
 
 export function DataTableToolbar<TData>({
 	table,
-	filterKey
+	filterKey,
+	options
 }: DataTableToolbarProps<TData>) {
 	const isFiltered = table.getState().columnFilters.length > 0
 
@@ -32,11 +33,11 @@ export function DataTableToolbar<TData>({
 					}
 					className='h-8 w-[150px] lg:w-[250px]'
 				/>
-				{/* {table.getColumn('status') && (
+				{table.getColumn('status') && (
 					<DataTableFacetedFilter
-						column={table.getColumn('status')}
+						column={table.getColumn(options[0]!)}
 						title='Status'
-						options={statuses}
+						options={options}
 					/>
 				)}
 				{table.getColumn('priority') && (
@@ -45,7 +46,7 @@ export function DataTableToolbar<TData>({
 						title='Priority'
 						options={priorities}
 					/>
-				)} */}
+				)}
 
 				{isFiltered && (
 					<Button

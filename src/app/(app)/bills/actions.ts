@@ -15,7 +15,7 @@ export const createBillAction = authenticatedAction
 			payee: z.string().min(1),
 			dueDate: z.coerce.date(),
 			isRecurring: z.boolean(),
-			isPaid: z.boolean(),
+			// isPaid: z.boolean(),
 			categoryId: z.string().min(1)
 		})
 	)
@@ -29,7 +29,7 @@ export const createBillAction = authenticatedAction
 				payee: input.payee,
 				dueDate: input.dueDate,
 				isRecurring: input.isRecurring,
-				isPaid: input.isPaid,
+				// isPaid: input.isPaid,
 				categoryId: input.categoryId
 			})
 		} catch (error) {

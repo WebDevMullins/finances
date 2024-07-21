@@ -82,7 +82,7 @@ export const bills = createTable('bills', {
 	payee: text('payee').notNull(),
 	dueDate: timestamp('due_date').notNull(),
 	isRecurring: boolean('is_reccuring').notNull(),
-	isPaid: boolean('is_paid').notNull(),
+	isPaid: boolean('is_paid'),
 	categoryId: text('category_id')
 		.references(() => categories.id, {
 			onDelete: 'set null'

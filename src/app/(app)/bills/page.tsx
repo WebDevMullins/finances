@@ -9,6 +9,8 @@ import { getBillsAction } from './actions'
 export default async function BillsPage() {
 	const [billData] = await getBillsAction()
 
+	console.log(billData)
+
 	return (
 		<div className='container py-12'>
 			<div className='overflow-hidden rounded-[0.5rem] border bg-background shadow'>
@@ -28,6 +30,7 @@ export default async function BillsPage() {
 						columns={columns}
 						data={billData?.bill as Bill[]}
 						filterKey='payee'
+						options={['recurring', 'paid']}
 					/>
 				</div>
 			</div>
