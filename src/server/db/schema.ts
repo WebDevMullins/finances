@@ -78,6 +78,7 @@ export const CategorySchema = createInsertSchema(categories)
 
 export const bills = createTable('bills', {
 	id: text('id').primaryKey(),
+	recurringId: text('recurring_id'),
 	amount: integer('amount').notNull(),
 	payee: text('payee').notNull(),
 	dueDate: timestamp('due_date').notNull(),

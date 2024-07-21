@@ -15,7 +15,6 @@ export const createBillAction = authenticatedAction
 			payee: z.string().min(1),
 			dueDate: z.coerce.date(),
 			isRecurring: z.boolean(),
-			// isPaid: z.boolean(),
 			categoryId: z.string().min(1)
 		})
 	)
@@ -29,7 +28,6 @@ export const createBillAction = authenticatedAction
 				payee: input.payee,
 				dueDate: input.dueDate,
 				isRecurring: input.isRecurring,
-				// isPaid: input.isPaid,
 				categoryId: input.categoryId
 			})
 		} catch (error) {
@@ -52,7 +50,13 @@ export const getBillsAction = authenticatedAction
 
 export const deleteBillAction = authenticatedAction
 	.createServerAction()
-	.input(z.string())
+	.input(
+		z.object({
+			billId: z.string(),
+			recurringId: z.string().optional(),
+			deleteRecurring: z.boolean().optional()
+		})
+	)
 	.onError(async () => {
 		console.error('Error deleting bill')
 	})

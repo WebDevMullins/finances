@@ -22,6 +22,7 @@ export type Category = {
 
 export type Bill = {
 	id: string
+	recurringId?: string | null
 	payee: string
 	amount: number
 	dueDate: Date

@@ -10,6 +10,16 @@ export async function getBillsUseCase(userId: string) {
 	return bills
 }
 
-export async function deleteBillUseCase(id: string) {
-	await deleteBill(id)
+type deleteBillParams = {
+	billId: string
+	recurringId?: string
+	deleteRecurring?: boolean
+}
+
+export async function deleteBillUseCase({
+	billId,
+	recurringId,
+	deleteRecurring
+}: deleteBillParams) {
+	await deleteBill(billId, recurringId, deleteRecurring)
 }

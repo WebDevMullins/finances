@@ -1,6 +1,7 @@
 import { db } from '@/server/db/index'
 import { accounts, bills, categories } from '@/server/db/schema'
-import { desc, eq } from 'drizzle-orm'
+import { addMonths } from 'date-fns'
+import { asc, eq } from 'drizzle-orm'
 import { nanoid } from 'nanoid'
 
 type createBillParams = {
@@ -16,18 +17,39 @@ export async function createBill({
 	payee,
 	dueDate,
 	isRecurring,
-	// isPaid,
 	categoryId
 }: createBillParams) {
 	try {
+		const recurringId = isRecurring ? nanoid() : null
+
 		await db.insert(bills).values({
 			id: nanoid(),
+			recurringId: recurringId,
 			amount: amount,
 			payee: payee,
 			dueDate: dueDate,
 			isRecurring: isRecurring,
 			categoryId: categoryId
 		})
+
+		if (isRecurring) {
+			// Create a recurring bill
+			const numMonths = 11
+			let currentDate = new Date(dueDate)
+
+			for (let i = 0; i < numMonths; i++) {
+				currentDate = addMonths(currentDate, 1)
+				await db.insert(bills).values({
+					id: nanoid(),
+					recurringId: recurringId,
+					amount: amount,
+					payee: payee,
+					dueDate: currentDate,
+					isRecurring: true,
+					categoryId: categoryId
+				})
+			}
+		}
 	} catch (error) {
 		console.error('Error creating bill', error)
 		throw error
@@ -38,6 +60,7 @@ export async function getBills(userId: string) {
 	const bill = await db
 		.selectDistinct({
 			id: bills.id,
+			recurringId: bills.recurringId,
 			amount: bills.amount,
 			payee: bills.payee,
 			dueDate: bills.dueDate,
@@ -50,11 +73,24 @@ export async function getBills(userId: string) {
 		.from(bills)
 		.leftJoin(categories, eq(bills.categoryId, categories.id))
 		.innerJoin(accounts, eq(accounts.userId, userId))
-		.orderBy(desc(bills.dueDate))
+		.orderBy(asc(bills.dueDate))
 
 	return { bill }
 }
 
-export async function deleteBill(id: string) {
-	await db.delete(bills).where(eq(bills.id, id))
+export async function deleteBill(
+	billId: string,
+	recurringId?: string,
+	deleteRecurring?: boolean
+) {
+	try {
+		if (deleteRecurring) {
+			await db.delete(bills).where(eq(bills.recurringId, recurringId ?? ''))
+		} else {
+			await db.delete(bills).where(eq(bills.id, billId))
+		}
+	} catch (error) {
+		console.error('Error deleting bill', error)
+		throw error
+	}
 }
