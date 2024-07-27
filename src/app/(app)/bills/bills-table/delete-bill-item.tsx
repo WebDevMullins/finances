@@ -7,36 +7,29 @@ import { ConfirmDeleteBillDialog } from '../confirm-delete-bill-dialog'
 type Props = {
 	billId: string
 	recurringId?: string | undefined
-	deleteRecurring?: boolean
+	isRecurring?: boolean
+	deleteAll?: boolean
 }
 
-export function DeleteBillItem({
-	billId,
-	recurringId,
-	deleteRecurring
-}: Props) {
+export function DeleteBillItem({ billId, recurringId, isRecurring }: Props) {
 	const { execute, error } = useServerAction(deleteBillAction)
 
-	async function deleteBill() {
-		await execute({ billId, recurringId, deleteRecurring })
+	async function deleteBill(deleteAll?: boolean) {
+		await execute({ billId, recurringId, isRecurring, deleteAll })
 
 		if (error) {
 			console.error('Error deleting bill', error)
 			toast.error('Error deleting bill')
 			return
 		}
-		console.log(
-			'Bill deleted info: ',
-			'BillId: ',
-			billId,
-			'RecurringId: ',
-			recurringId,
-			'DeleteRecurring: ',
-			deleteRecurring
-		)
 
-		toast.success('Bill deleted')
+		toast.success(deleteAll ? 'Recurring bills deleted' : 'Bill deleted')
 	}
 
-	return <ConfirmDeleteBillDialog onClick={deleteBill} />
+	return (
+		<ConfirmDeleteBillDialog
+			onClick={deleteBill}
+			isRecurring={isRecurring}
+		/>
+	)
 }

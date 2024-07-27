@@ -54,7 +54,8 @@ export const deleteBillAction = authenticatedAction
 		z.object({
 			billId: z.string(),
 			recurringId: z.string().optional(),
-			deleteRecurring: z.boolean().optional()
+			isRecurring: z.boolean().optional(),
+			deleteAll: z.boolean().optional()
 		})
 	)
 	.onError(async () => {

@@ -17,12 +17,12 @@ import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import { useState } from 'react'
 
 type Props = {
-	onClick: () => void
+	onClick: (deleteAll?: boolean) => void
+	isRecurring?: boolean | undefined
 }
 
-export function ConfirmDeleteBillDialog({ onClick }: Props) {
+export function ConfirmDeleteBillDialog({ onClick, isRecurring }: Props) {
 	const [deleteAll, setDeleteAll] = useState(false)
-	console.log('DeleteAll: ', deleteAll)
 
 	return (
 		<AlertDialog>
@@ -45,18 +45,24 @@ export function ConfirmDeleteBillDialog({ onClick }: Props) {
 						This action cannot be undone.
 					</AlertDialogDescription>
 				</AlertDialogHeader>
+				{isRecurring && (
+					<div className='flex items-center space-x-2'>
+						<Checkbox
+							checked={deleteAll}
+							onCheckedChange={(checked) => {
+								setDeleteAll(checked === !deleteAll)
+							}}
+						/>
+						<span className='text-sm text-muted-foreground'>
+							Delete all recurring bills
+						</span>
+					</div>
+				)}
 				<AlertDialogFooter>
-					<Checkbox
-						checked={deleteAll}
-						onCheckedChange={(checked) => {
-							setDeleteAll(checked === !deleteAll)
-						}}
-					/>
-					Delete All Recurring Bills
 					<AlertDialogCancel>Cancel</AlertDialogCancel>
 					<AlertDialogAction
 						className={buttonVariants({ variant: 'destructive' })}
-						onClick={onClick}>
+						onClick={() => onClick(deleteAll)}>
 						<Trash2Icon className='mr-2 size-4' />
 						<span>Delete</span>
 					</AlertDialogAction>

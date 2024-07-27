@@ -81,10 +81,10 @@ export async function getBills(userId: string) {
 export async function deleteBill(
 	billId: string,
 	recurringId?: string,
-	deleteRecurring?: boolean
+	deleteAll?: boolean
 ) {
 	try {
-		if (deleteRecurring) {
+		if (deleteAll) {
 			await db.delete(bills).where(eq(bills.recurringId, recurringId ?? ''))
 		} else {
 			await db.delete(bills).where(eq(bills.id, billId))

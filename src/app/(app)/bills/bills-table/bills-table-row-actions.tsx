@@ -24,7 +24,6 @@ export function TransactionsTableRowActions<TData>({
 	row
 }: DataTableRowActionsProps<TData>) {
 	const bill = BillSchema.parse(row.original)
-	console.log('Bill: ', bill.recurringId)
 
 	return (
 		<DropdownMenu>
@@ -43,7 +42,7 @@ export function TransactionsTableRowActions<TData>({
 				<DropdownMenuSeparator />
 				<DeleteBillItem
 					billId={bill.id}
-					deleteRecurring={bill.isRecurring}
+					isRecurring={bill.isRecurring}
 					recurringId={bill.recurringId ?? undefined}
 				/>
 			</DropdownMenuContent>

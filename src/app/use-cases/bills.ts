@@ -13,13 +13,13 @@ export async function getBillsUseCase(userId: string) {
 type deleteBillParams = {
 	billId: string
 	recurringId?: string
-	deleteRecurring?: boolean
+	deleteAll?: boolean
 }
 
 export async function deleteBillUseCase({
 	billId,
 	recurringId,
-	deleteRecurring
+	deleteAll
 }: deleteBillParams) {
-	await deleteBill(billId, recurringId, deleteRecurring)
+	await deleteBill(billId, recurringId, deleteAll)
 }
