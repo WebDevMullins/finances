@@ -26,6 +26,7 @@ export function DataTableToolbar<TData>({
 		<div className='flex items-center justify-between'>
 			<div className='flex flex-1 items-center space-x-2'>
 				<Input
+					id='filter'
 					placeholder={`Filter ${filterKey}...`}
 					value={(table.getColumn(filterKey)?.getFilterValue() as string) ?? ''}
 					onChange={(event) =>
@@ -33,7 +34,7 @@ export function DataTableToolbar<TData>({
 					}
 					className='h-8 w-[150px] lg:w-[250px]'
 				/>
-				{table.getColumn('status') && (
+				{/* {table.getColumn('status') && (
 					<DataTableFacetedFilter
 						column={table.getColumn(options[0]!)}
 						title='Status'
@@ -46,7 +47,7 @@ export function DataTableToolbar<TData>({
 						title='Priority'
 						options={priorities}
 					/>
-				)}
+				)} */}
 
 				{isFiltered && (
 					<Button
