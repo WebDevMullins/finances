@@ -1,7 +1,7 @@
 'use client'
 
 import { type Row } from '@tanstack/react-table'
-import { MoreHorizontalIcon } from 'lucide-react'
+import { DollarSignIcon, MoreHorizontalIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -13,6 +13,7 @@ import {
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 
+import { SheetTrigger } from '@/components/ui/sheet'
 import { BillSchema } from '@/server/db/schema'
 import { DeleteBillItem } from './delete-bill-item'
 
@@ -39,6 +40,12 @@ export function TransactionsTableRowActions<TData>({
 				<DropdownMenuLabel>{bill.payee}</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem>View bill details</DropdownMenuItem>
+				<SheetTrigger asChild>
+					<DropdownMenuItem className='text-emerald-500'>
+						<DollarSignIcon className='mr-2 size-4' />
+						<span>Pay bill</span>
+					</DropdownMenuItem>
+				</SheetTrigger>
 				<DropdownMenuSeparator />
 				<DeleteBillItem
 					billId={bill.id}
