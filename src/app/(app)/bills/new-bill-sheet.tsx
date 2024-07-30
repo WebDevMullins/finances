@@ -90,7 +90,7 @@ export function NewBillSheet({ id, defaultValues }: Props) {
 			}
 		}
 		fetchData().catch(console.error)
-	}, [])
+	}, [isOpen])
 
 	async function onSubmit(values: FormValues) {
 		const amount = parseFloat(values.amount)
