@@ -71,3 +71,28 @@ export const deleteBillAction = authenticatedAction
 
 		revalidatePath('/bills')
 	})
+
+export const payBillAction = authenticatedAction
+	.createServerAction()
+	.input(
+		z.object({
+			billId: z.string(),
+			recurringId: z.string().optional(),
+			isRecurring: z.boolean().optional(),
+			deleteAll: z.boolean().optional()
+		})
+	)
+	.onError(async () => {
+		console.error('Error paying bill')
+	})
+	.handler(async ({ input }) => {
+		try {
+			// await payBillUseCase(input)
+			console.log('Paying bill', input)
+		} catch (err) {
+			console.error('Error paying bill', err)
+			throw err
+		}
+
+		revalidatePath('/bills')
+	})

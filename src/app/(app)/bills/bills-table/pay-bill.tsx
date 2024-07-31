@@ -1,8 +1,8 @@
 import { toast } from 'sonner'
 import { useServerAction } from 'zsa-react'
 
-import { deleteBillAction } from '../actions'
-import { ConfirmDeleteBillDialog } from '../confirm-delete-bill-dialog'
+import { payBillAction } from '../actions'
+import { PayBillDialog } from '../pay-bill-dialog'
 
 type Props = {
 	billId: string
@@ -12,9 +12,9 @@ type Props = {
 }
 
 export function PayBill({ billId, recurringId, isRecurring }: Props) {
-	const { execute, error } = useServerAction(deleteBillAction)
+	const { execute, error } = useServerAction(payBillAction)
 
-	async function deleteBill(deleteAll?: boolean) {
+	async function payBill(deleteAll?: boolean) {
 		await execute({ billId, recurringId, isRecurring, deleteAll })
 
 		if (error) {
@@ -27,9 +27,10 @@ export function PayBill({ billId, recurringId, isRecurring }: Props) {
 	}
 
 	return (
-		<ConfirmDeleteBillDialog
-			onClick={deleteBill}
-			isRecurring={isRecurring}
-		/>
+		<PayBillDialog
+			title='Pay Bill'
+			description='Enter details of the bill to be paid.'>
+			Form goes here
+		</PayBillDialog>
 	)
 }
