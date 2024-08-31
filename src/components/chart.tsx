@@ -1,6 +1,5 @@
 'use client'
 
-// import * as React from "react"
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts'
 
 import {
@@ -18,14 +17,11 @@ import {
 	ChartTooltip,
 	ChartTooltipContent
 } from '@/components/ui/chart'
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue
-} from '@/components/ui/select'
-import { useState } from 'react'
+import { MAX_DATE_RANGE_DAYS } from '@/lib/constants'
+import { differenceInDays, startOfMonth } from 'date-fns'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
+import { DateRangePicker } from './date-range-picker'
 
 export const description = 'An interactive area chart'
 
@@ -138,20 +134,20 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function Chart() {
-	const [timeRange, setTimeRange] = useState('90d')
-
-	const filteredData = chartData.filter((item) => {
-		const date = new Date(item.date)
-		const now = new Date()
-		let daysToSubtract = 90
-		if (timeRange === '30d') {
-			daysToSubtract = 30
-		} else if (timeRange === '7d') {
-			daysToSubtract = 7
-		}
-		now.setDate(now.getDate() - daysToSubtract)
-		return date >= now
+	const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
+		from: startOfMonth(new Date()),
+		to: new Date()
 	})
+
+	const [filteredData, setFilteredData] = useState(chartData)
+
+	useEffect(() => {
+		const filtered = chartData.filter((data) => {
+			const date = new Date(data.date)
+			return date >= dateRange.from && date <= dateRange.to
+		})
+		setFilteredData(filtered)
+	}, [dateRange])
 
 	return (
 		<Card>
@@ -162,7 +158,23 @@ export function Chart() {
 						Showing total visitors for the last 3 months
 					</CardDescription>
 				</div>
-				<Select
+				<DateRangePicker
+					initialDateFrom={dateRange.from}
+					initialDateTo={dateRange.to}
+					showCompare={false}
+					onUpdate={(values) => {
+						const { from, to } = values.range
+						if (!from || !to) return
+						if (differenceInDays(to, from) > MAX_DATE_RANGE_DAYS) {
+							toast.error(
+								`The selected date range is too large. Maximum date range is ${MAX_DATE_RANGE_DAYS} days.`
+							)
+							return
+						}
+						setDateRange({ from, to })
+					}}
+				/>
+				{/* <Select
 					value={timeRange}
 					onValueChange={setTimeRange}>
 					<SelectTrigger
@@ -187,7 +199,7 @@ export function Chart() {
 							Last 7 days
 						</SelectItem>
 					</SelectContent>
-				</Select>
+				</Select> */}
 			</CardHeader>
 			<CardContent className='px-2 pt-4 sm:px-6 sm:pt-6'>
 				<ChartContainer

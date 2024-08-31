@@ -41,7 +41,7 @@ export function TransactionsTableRowActions<TData>({
 				<DropdownMenuSeparator />
 				<DropdownMenuItem>View bill details</DropdownMenuItem>
 				{/* <DropdownMenuItem className='text-emerald-500'> */}
-					<PayBill billId={bill.id} />
+				<PayBill billId={bill.id} />
 				{/* </DropdownMenuItem> */}
 				<DropdownMenuSeparator />
 				<DeleteBillItem
