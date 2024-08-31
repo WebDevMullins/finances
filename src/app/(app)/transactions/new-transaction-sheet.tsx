@@ -72,6 +72,8 @@ export function NewTransactionSheet({ id, defaultValues }: Props) {
 	const [accounts, setAccounts] = useState<Account[]>([])
 
 	useEffect(() => {
+		if (!isOpen) return
+
 		async function fetchData() {
 			try {
 				const [accountData] = await getAccountsAction()
@@ -89,7 +91,7 @@ export function NewTransactionSheet({ id, defaultValues }: Props) {
 			}
 		}
 		fetchData().catch(console.error)
-	}, [])
+	}, [isOpen])
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		const amount = parseFloat(values.amount)
