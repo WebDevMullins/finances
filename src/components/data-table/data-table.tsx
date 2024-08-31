@@ -32,14 +32,14 @@ interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[]
 	data: TData[]
 	filterKey: string
-	options: string[]
+	// options: string[]
 }
 
 export function DataTable<TData, TValue>({
 	columns,
 	data,
 	filterKey,
-	options
+	// options
 }: DataTableProps<TData, TValue>) {
 	const [rowSelection, setRowSelection] = useState({})
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -73,7 +73,7 @@ export function DataTable<TData, TValue>({
 			<DataTableToolbar
 				table={table}
 				filterKey={filterKey}
-				options={options}
+				// options={options}
 			/>
 			<div className='rounded-md border'>
 				<Table>

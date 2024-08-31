@@ -30,6 +30,7 @@ export default async function TransactionsPage() {
 						columns={columns}
 						data={transactionData?.transaction as Transaction[]}
 						filterKey='payee'
+						// options={}
 					/>
 				</div>
 			</div>

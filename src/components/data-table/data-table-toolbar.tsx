@@ -12,13 +12,13 @@ import { DataTableViewOptions } from './data-table-view-options'
 interface DataTableToolbarProps<TData> {
 	table: Table<TData>
 	filterKey: string
-	options: string[]
+	// options: string[]
 }
 
 export function DataTableToolbar<TData>({
 	table,
 	filterKey,
-	options
+	// options
 }: DataTableToolbarProps<TData>) {
 	const isFiltered = table.getState().columnFilters.length > 0
 

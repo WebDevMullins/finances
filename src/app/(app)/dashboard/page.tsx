@@ -1,3 +1,5 @@
+import { Chart } from '@/components/chart'
+import { CalendarDateRangePicker } from '@/components/date-range-picker'
 import { currentUser } from '@clerk/nextjs/server'
 
 export default async function DashboardPage() {
@@ -14,8 +16,11 @@ export default async function DashboardPage() {
 								Welcome back, {user?.firstName}!
 							</p>
 						</div>
-						<div className='flex items-center space-x-2'></div>
+						<div className='flex items-center space-x-2'>
+							<CalendarDateRangePicker />
+						</div>
 					</div>
+					<Chart />
 				</div>
 			</div>
 		</div>
