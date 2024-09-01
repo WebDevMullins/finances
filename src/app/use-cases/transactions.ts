@@ -1,4 +1,8 @@
-import { deleteTransaction, getTransactions } from '@/data-access/transactions'
+import {
+	deleteTransaction,
+	getTransactions,
+	getTransactionsByDateRange
+} from '@/data-access/transactions'
 
 export async function getTransactionsUseCase(userId: string) {
 	// if (!userId) {
@@ -7,6 +11,12 @@ export async function getTransactionsUseCase(userId: string) {
 
 	const transactions = await getTransactions(userId)
 
+	return transactions
+}
+
+export async function getTransactionsByDateRangeUseCase(from: Date, to: Date) {
+	const transactions = await getTransactionsByDateRange(from, to)
+	
 	return transactions
 }
 

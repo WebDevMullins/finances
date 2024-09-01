@@ -1,6 +1,6 @@
 import { db } from '@/server/db/index'
 import { accounts, categories, transactions } from '@/server/db/schema'
-import { and, desc, eq } from 'drizzle-orm'
+import { and, desc, eq, gte, lte } from 'drizzle-orm'
 import { nanoid } from 'nanoid'
 
 type createTransactionParams = {
@@ -55,6 +55,25 @@ export async function getTransactions(userId: string) {
 			)
 		)
 		.orderBy(desc(transactions.date))
+	return { transaction }
+}
+
+export async function getTransactionsByDateRange(from: Date, to: Date) {
+	const transaction = await db
+		.select({
+			id: transactions.id,
+			amount: transactions.amount,
+			payee: transactions.payee,
+			date: transactions.date,
+			account: accounts.name,
+			accountId: transactions.accountId,
+			category: categories.name,
+			categoryId: transactions.categoryId
+		})
+		.from(transactions)
+		.innerJoin(accounts, eq(transactions.accountId, accounts.id))
+		.leftJoin(categories, eq(transactions.categoryId, categories.id))
+		.where(and(gte(transactions.date, from), lte(transactions.date, to)))
 	return { transaction }
 }
 

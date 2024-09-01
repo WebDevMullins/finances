@@ -4,10 +4,10 @@
 import { relations } from 'drizzle-orm'
 import {
 	boolean,
+	date,
 	integer,
 	pgTableCreator,
 	text,
-	timestamp,
 	varchar
 } from 'drizzle-orm/pg-core'
 import { createInsertSchema } from 'drizzle-zod'
@@ -39,7 +39,7 @@ export const transactions = createTable('transactions', {
 	id: text('id').primaryKey(),
 	amount: integer('amount').notNull(),
 	payee: text('payee').notNull(),
-	date: timestamp('date', { mode: 'date' }).notNull(),
+	date: date('date', { mode: 'date' }).notNull(),
 	accountId: text('account_id')
 		.references(() => accounts.id, {
 			onDelete: 'cascade'
@@ -81,7 +81,7 @@ export const bills = createTable('bills', {
 	recurringId: text('recurring_id'),
 	amount: integer('amount').notNull(),
 	payee: text('payee').notNull(),
-	dueDate: timestamp('due_date').notNull(),
+	dueDate: date('due_date').notNull(),
 	isRecurring: boolean('is_reccuring').notNull(),
 	isPaid: boolean('is_paid'),
 	categoryId: text('category_id')

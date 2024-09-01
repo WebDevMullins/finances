@@ -1,8 +1,15 @@
 import { Chart } from '@/components/chart'
 import { currentUser } from '@clerk/nextjs/server'
 
+import type { Transaction } from '@/lib/types'
+import { getTransactionsAction } from '../transactions/actions'
+// import { getTransactionsByDateRangeAction } from './actions'
+
 export default async function DashboardPage() {
 	const user = await currentUser()
+	const [transactionData] = await getTransactionsAction()
+
+	console.log('@@@ ',transactionData)
 
 	return (
 		<div className='container py-12'>
@@ -17,7 +24,9 @@ export default async function DashboardPage() {
 						</div>
 						<div className='flex items-center space-x-2'></div>
 					</div>
-					<Chart />
+					<Chart
+						transactionData={transactionData?.transaction as Transaction[]}
+					/>
 				</div>
 			</div>
 		</div>
